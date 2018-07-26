@@ -1,5 +1,13 @@
-FROM            leesoo/fc-8th-eb-docker:base
-MAINTAINER      isoo7510@gmail.com
+FROM                python:3.6.5-slim
+MAINTAINER          isoo7510@gmail.com
+
+# pip install uwsgi
+RUN                 apt -y update && apt -y dist-upgrade
+RUN                 apt -y install build-essential
+RUN                 apt -y install nginx supervisor
+
+COPY                ./requirements.txt  /srv/
+RUN                 pip install -r /srv/requirements.txt
 
 # Production
 ENV             BUILD_MODE              production
@@ -15,7 +23,7 @@ RUN             cp -f   /srv/project/.config/${BUILD_MODE}/nginx.conf \
                         /etc/nginx/nginx.conf && \
                 cp -f   /srv/project/.config/${BUILD_MODE}/nginx_app.conf \
                         /etc/nginx/sites-available && \
-#                rm -f   /etc/nginx/sites-enabled/* && \
+                rm -f   /etc/nginx/sites-enabled/* && \
                 ln -sf  /etc/nginx/sites-available/nginx_app.conf \
                         /etc/nginx/sites-enabled/
 
