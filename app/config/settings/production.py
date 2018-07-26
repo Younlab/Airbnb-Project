@@ -2,9 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'localhost',
-]
+ALLOWED_HOSTS = secrets['ALLOWED_HOSTS']
 
 WSGI_APPLICATION = 'config.wsgi.production.application'
 
@@ -21,6 +19,9 @@ DATABASES = {
 
 # Log
 LOG_DIR = '/var/log/django'
+if not os.path.exists(LOG_DIR):
+    LOG_DIR = os.path.join(ROOT_DIR, '.log')
+    os.makedirs(LOG_DIR, exist_ok=True)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
