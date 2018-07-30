@@ -31,11 +31,19 @@ MEDIA_URL = '/media/'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = secrets['SECRET_KEY']
 
+# Auth
+AUTH_USER_MODEL = 'members.User'
+
 # SECURITY WARNING: don't run with debug turned on in production!
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'members.apps.MembersConfig',
+    'posts.apps.PostsConfig',
+    'rooms.apps.RoomsConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
