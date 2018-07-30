@@ -11,7 +11,7 @@ class User(AbstractUser):
     )
 
     email = models.EmailField(unique=True)
-    img = models.ImageField(blank=True)
+    profile_image = models.ImageField(blank=True)
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
         max_length=1,
