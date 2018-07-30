@@ -9,14 +9,17 @@ class User(AbstractUser):
         ('C', 'Customer'),
         ('H', 'Host'),
     )
-
+    # User ID
     username = models.EmailField(unique=True)
+    # User Profile Image
     profile_image = models.ImageField(blank=True)
+    # Phone Number
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
         max_length=1,
         choices=STATUS,
     )
+    # User type
     likes_posts = models.ManyToManyField(
         Post,
         blank=True,
