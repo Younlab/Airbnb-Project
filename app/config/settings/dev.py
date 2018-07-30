@@ -1,3 +1,4 @@
+# 개발 모드
 from .base import *
 
 DEBUG = True
