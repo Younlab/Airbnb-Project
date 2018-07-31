@@ -20,8 +20,13 @@ class User(AbstractUser):
     # Phone Number
     phone_number = models.CharField(max_length=50)
 
+    # Email field
     email = models.EmailField()
+
+    # facebook 가입자는 자동으로 True 표시 되게끔 구현하기
     is_facebook_user = models.BooleanField(default=False)
+
+    # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
 
     # User type
