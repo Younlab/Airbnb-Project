@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
+
 from posts.models import Post
 
 
@@ -9,10 +12,15 @@ class User(AbstractUser):
         ('C', 'Customer'),
         ('H', 'Host'),
     )
-    # User ID
-    username = models.CharField(unique=True)
+
     # User Profile Image
-    profile_image = models.ImageField(blank=True)
+    profile_image = ProcessedImageField(
+        upload_to='profile_image',
+        processors=[Thumbnail(100, 100)],
+        format='JPEG',
+        options={'quality': 100},
+    )
+
     # Phone Number
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
