@@ -8,10 +8,6 @@ from posts.models import Post
 
 
 class User(AbstractUser):
-    STATUS = (
-        ('C', 'Customer'),
-        ('H', 'Host'),
-    )
 
     # User Profile Image
     profile_image = ProcessedImageField(
@@ -23,10 +19,11 @@ class User(AbstractUser):
 
     # Phone Number
     phone_number = models.CharField(max_length=50)
-    status = models.CharField(
-        max_length=1,
-        choices=STATUS,
-    )
+
+    email = models.EmailField()
+    is_facebook_user = models.BooleanField(default=False)
+    is_host = models.BooleanField(default=False)
+
     # User type
     likes_posts = models.ManyToManyField(
         Post,
