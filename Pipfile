@@ -7,6 +7,7 @@ name = "pypi"
 django = "*"
 uwsgi = "*"
 pillow = "*"
+django-rest-framework = "*"
 
 [dev-packages]
 awsebcli = "*"

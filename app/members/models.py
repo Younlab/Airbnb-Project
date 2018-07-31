@@ -10,11 +10,12 @@ class User(AbstractUser):
         ('H', 'Host'),
     )
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     img = models.ImageField(blank=True)
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
         max_length=1,
+        default='C',
         choices=STATUS,
     )
     likes_posts = models.ManyToManyField(
