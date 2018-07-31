@@ -9,10 +9,12 @@ class User(AbstractUser):
         ('C', 'Customer'),
         ('H', 'Host'),
     )
+
+
     # User ID
     username = models.CharField(unique=True)
     # User Profile Image
-    profile_image = models.ImageField(blank=True)
+    profile_image = models.ImageField(blank=True, upload_to='user_profile_image')
     # Phone Number
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
