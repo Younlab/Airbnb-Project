@@ -10,7 +10,7 @@ class User(AbstractUser):
         ('H', 'Host'),
     )
     # User ID
-    username = models.EmailField(unique=True)
+    username = models.CharField(unique=True)
     # User Profile Image
     profile_image = models.ImageField(blank=True)
     # Phone Number
