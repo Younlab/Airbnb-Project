@@ -15,6 +15,7 @@ class User(AbstractUser):
         processors=[Thumbnail(100, 100)],
         format='JPEG',
         options={'quality': 100},
+        blank=True,
     )
 
     # Phone Number

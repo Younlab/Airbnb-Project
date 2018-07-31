@@ -7,7 +7,9 @@ from rooms.models import Room
 class Post(models.Model):
     host = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL(),
+        null=True,
+        blank=True,
     )
 
     title = models.CharField(max_length=200)
