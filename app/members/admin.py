@@ -1,16 +1,38 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.translation import gettext_lazy as _
 from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (None, {
+            'fields': (
+                'username',
+                'password',
+            ),
+        }),
+        ('개인정보', {
+            'fields': (
+                'last_name',
+                'first_name',
+                'email',
+                'profile_image',
+                'phone_number',
+            ),
+        }),
+        ('권한', {
+            'fields': (
+                'is_active',
+                'is_staff',
+                'is_superuser',
+            ),
+        }),
+        ('주요 일자', {
+            'fields': (
+                'last_login',
+                'date_joined',
+            ),
+        }),
     )
 
 
