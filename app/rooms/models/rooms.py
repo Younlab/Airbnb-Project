@@ -146,3 +146,12 @@ class RoomImage(models.Model):
         format='PNG',
         options={'quality': 100},
     )
+
+
+class RoomRules(models.Model):
+    room = models.ForeignKey(
+        RoomDetail,
+        on_delete=models.CASCADE,
+        related_name='room_rules'
+    )
+    rule_list = models.CharField(max_length=50)
