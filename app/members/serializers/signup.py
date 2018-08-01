@@ -6,7 +6,7 @@ User = get_user_model()
 
 class UserSignupSerializer(serializers.ModelSerializer):
     # serializer에는 password_check가 없기에 비교해줄 필드를 임의로 만듬
-    password_check = serializers.CharField(max_length=100)
+    password_check = serializers.CharField(max_length=100, write_only=True)
 
     class Meta:
         model = User
@@ -18,13 +18,13 @@ class UserSignupSerializer(serializers.ModelSerializer):
         )
 
     # db에 유저가 존재할경우 에러발생
-    def validated_username(self, value):
-        if User.objects.get(username=value).exists():
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("이미 있는 아이디 입니다. 다른 아이디를 입력하세요")
         return value
 
     # password의 길이가 8글자 아래일 경우 에러발생
-    def validated_password(self, value):
+    def validate_password(self, value):
         if len(value) < 8:
             raise serializers.ValidationError("비밀번호는 8글자 이상이여야 합니다.")
         return value
@@ -37,9 +37,9 @@ class UserSignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("비밀번호와 비밀번호 확인이 같지 않습니다.")
         else:
             user = User.objects.create_user(
-                username=validated_data['username'],
-                email=validated_data['email'],
-                password=validated_data['password']
+                username=self.validated_data['username'],
+                email=self.validated_data['email'],
+                password=self.validated_data['password']
             )
             user.save()
 
