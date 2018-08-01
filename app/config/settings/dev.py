@@ -8,6 +8,7 @@ ALLOWED_HOSTS = []
 WSGI_APPLICATION = 'config.wsgi.dev.application'
 
 INSTALLED_APPS += [
+    'django_extensions',
 ]
 
 DATABASES = {
