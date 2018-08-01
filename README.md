@@ -14,7 +14,23 @@
 
 ```json
 {
-  "SECRET_KEY": "<Django secret key>"
+  "SECRET_KEY": "<Django secret key>",
+  "ALLOWED_HOSTS": [
+    "<Hosts>"
+  ],
+
+  "DATABASES": {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": "<host>",
+        "PORT": 5432,
+        "USER": "<user>",
+        "PASSWORD": "<password>",
+        "NAME": "<db name>"
+    }
+  },
+
+
 }
 ```
 
