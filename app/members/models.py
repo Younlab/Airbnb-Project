@@ -4,7 +4,7 @@ from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
 
-from posts.models import Post
+from rooms.models import Post
 
 
 class User(AbstractUser):

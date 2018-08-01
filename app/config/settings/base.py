@@ -25,7 +25,7 @@ AUTH_USER_MODEL = 'members.User'
 
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
-    'posts.apps.PostsConfig',
+    'rooms.apps.RoomsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
