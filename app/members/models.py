@@ -12,7 +12,7 @@ class User(AbstractUser):
     # User ID
     username = models.EmailField(unique=True)
     # User Profile Image
-    profile_image = models.ImageField(blank=True)
+    profile_image = models.ImageField(upload_to='user', blank=True)
     # Phone Number
     phone_number = models.CharField(max_length=50)
     status = models.CharField(
