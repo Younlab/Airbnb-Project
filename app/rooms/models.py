@@ -17,6 +17,9 @@ class Rooms(models.Model):
 
     tag = models.CharField(max_length=50, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class RoomDetail(models.Model):
     """
@@ -94,16 +97,25 @@ class RoomDetail(models.Model):
     address_detail = models.CharField(max_length=100)
 
     # 위도
-    address_latitude = models.DecimalField()
+    address_latitude = models.DecimalField(
+        decimal_places=14,
+        max_digits=16,
+    )
 
     # 경도
-    address_longitude = models.DecimalField()
+    address_longitude = models.DecimalField(
+        decimal_places=14,
+        max_digits=17,
+    )
 
     # 생성 일자 자동 저장
     created_at = models.DateField(auto_now_add=True)
 
     # 수정 일자 자동 저장
     modified_date = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.pk} {self.rooms_name}'
 
 
 class RoomImage(models.Model):

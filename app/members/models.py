@@ -4,7 +4,7 @@ from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
 
-from rooms.models import Post
+from rooms.models import Rooms
 
 
 class User(AbstractUser):
@@ -32,7 +32,7 @@ class User(AbstractUser):
 
     # User type
     likes_posts = models.ManyToManyField(
-        Post,
+        Rooms,
         blank=True,
         related_name='like_posts',
         related_query_name='like_posts',
