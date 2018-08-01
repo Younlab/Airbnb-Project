@@ -23,9 +23,6 @@ class Rooms(models.Model):
     # 숙소 이름
     rooms_name = models.CharField(max_length=50)
 
-    #
-    sub_title = models.CharField(max_length=200, blank=True)
-
     tag = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
@@ -48,12 +45,10 @@ class RoomDetail(models.Model):
         (ROOMS_TYPE_GUESTHOUSE, '게스트하우스'),
     )
 
-    # host 정보
-    host = Rooms.host
-
     rooms = models.ForeignKey(
         Rooms,
         on_delete=models.CASCADE,
+        related_name='with_rooms'
     )
 
     # 숙소 설명
