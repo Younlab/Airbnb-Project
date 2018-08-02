@@ -4,6 +4,7 @@ __all__ = (
     'Facilities',
 )
 
+
 class Facilities(models.Model):
     """
     편의시설 연결

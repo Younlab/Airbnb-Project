@@ -16,6 +16,7 @@ django-storages = "*"
 [dev-packages]
 awsebcli = "*"
 ipython = "*"
+django-rest-framework = "*"
 django-extensions = "*"
 
 [requires]

@@ -35,6 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'imagekit',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
