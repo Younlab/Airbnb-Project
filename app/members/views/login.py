@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..serializers.login import UserLoginSerializer
+from ..serializers.user import UserSerializer
 
 User = get_user_model()
 
@@ -21,7 +22,7 @@ class UserLogin(APIView):
             data = {
                 'token': token.key,
                 # UserSerializer 나중에 만들어서 바꾸어 줘야함
-                'user': UserLoginSerializer(user).data,
+                'user': UserSerializer(user).data,
             }
             return Response(data)
         raise serializers.ValidationError("인증되지 않은 아이디 입니다.")
