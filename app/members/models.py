@@ -30,6 +30,7 @@ class User(AbstractUser):
 
     # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
+    activate = models.BooleanField(default=False)
 
     likes_posts = models.ManyToManyField(
         Rooms,

@@ -1,5 +1,15 @@
+import json
+import os
+
 from django.contrib.auth import get_user_model
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
+
+from config.settings import base
+from ..tokens import account_activation_token
 
 User = get_user_model()
 
@@ -36,11 +46,24 @@ class UserSignupSerializer(serializers.ModelSerializer):
         if validated_data['password'] != validated_data['password_check']:
             raise serializers.ValidationError("비밀번호와 비밀번호 확인이 같지 않습니다.")
         else:
-            user = User.objects.create_user(
+            members = User.objects.create_user(
                 username=self.validated_data['username'],
                 email=self.validated_data['email'],
                 password=self.validated_data['password']
             )
-            user.save()
+            members.save()
+
+            message = render_to_string('account_activate_email.html', {
+                'user': members,
+                'domain': 'localhost:8000',
+                'uid': urlsafe_base64_encode(force_bytes(members.pk)).decode('utf-8'),
+                'token': account_activation_token.make_token(members)
+            })
+
+            secrets = base.secrets
+            mail_subject = 'test'
+            to_email = secrets['EMAIL_HOST_USER']
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
 
         return validated_data
