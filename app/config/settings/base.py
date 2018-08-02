@@ -15,11 +15,22 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 MEDIA_URL = '/media/'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = secrets['SECRET_KEY']
 
 # Auth
 AUTH_USER_MODEL = 'members.User'
+
+# Email
+EMAIL_BACKEND = secrets['EMAIL_BACKEND']
+EMAIL_USE_TLS = True
+EMAIL_PORT = secrets['EMAIL_PORT']
+EMAIL_HOST = secrets['EMAIL_HOST']
+EMAIL_HOST_USER = secrets['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = secrets['EMAIL_HOST_PASSWORD']
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Application definition
 
@@ -56,7 +67,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            TEMPLATES_DIR,
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
