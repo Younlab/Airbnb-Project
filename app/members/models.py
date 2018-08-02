@@ -18,6 +18,7 @@ class User(AbstractUser):
         blank=True,
     )
 
+
     # Phone Number
     phone_number = models.CharField(max_length=50)
 
@@ -30,7 +31,6 @@ class User(AbstractUser):
     # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
 
-    # User type
     likes_posts = models.ManyToManyField(
         Rooms,
         blank=True,
