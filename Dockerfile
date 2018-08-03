@@ -32,7 +32,7 @@ RUN             cp -f   /srv/project/.config/${BUILD_MODE}/supervisor.conf \
                         /etc/supervisor/conf.d/
 
 # 7000번 포트 open
-EXPOSE          7000
+EXPOSE          80
 
 # supervisord 실행
 CMD             supervisord -n

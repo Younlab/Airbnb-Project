@@ -14,11 +14,11 @@ django-storages = "*"
 "psycopg2-binary" = "*"
 django-extensions = "*"
 ipython = "*"
+djangorestframework = "*"
 
 [dev-packages]
 awsebcli = "*"
 ipython = "*"
-django-rest-framework = "*"
 django-extensions = "*"
 
 [requires]
