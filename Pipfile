@@ -12,6 +12,8 @@ django-imagekit = "*"
 django-storages = "*"
 "boto3" = "*"
 "psycopg2-binary" = "*"
+django-extensions = "*"
+ipython = "*"
 
 [dev-packages]
 awsebcli = "*"

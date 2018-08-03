@@ -21,7 +21,13 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = secrets['SECRET_KEY']
 
 # Auth
+ADMIN_USERNAME = 'admin'
+ADMIN_PASSWORD = 'pbkdf2_sha256$120000$FvCiDNJivRgP$w6t7cSpd4UtRWAQ+Osi/xfN0M5KjkzwHYxB++TtNvVk='
 AUTH_USER_MODEL = 'members.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'members.backends.SettingsBackend',
+]
 
 # Email
 EMAIL_BACKEND = secrets['EMAIL_BACKEND']

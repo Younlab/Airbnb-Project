@@ -1,10 +1,14 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 from django.db import models
 
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
 
 from rooms.models import Rooms
+
+
+class UserManager(DjangoUserManager):
+    pass
 
 
 class User(AbstractUser):
@@ -38,3 +42,6 @@ class User(AbstractUser):
         related_name='like_posts',
         related_query_name='like_posts',
     )
+
+    # UserManager 동작 설정
+    objects = UserManager()
