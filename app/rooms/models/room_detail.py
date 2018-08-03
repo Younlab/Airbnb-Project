@@ -1,16 +1,22 @@
-from django.conf import settings
 from django.db import models
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill
 
+from rooms.models import Rooms
 from .facilities import Facilities
 
 
-class Rooms(models.Model):
+__all__ = (
+    'RoomDetail',
+    'RoomImage',
+    'RoomRules',
+)
+
+
+class RoomDetail(models.Model):
     """
     Rooms Details 세부 사항,
     """
-
     ROOMS_TYPE_APARTMENT = 'AP'
     ROOMS_TYPE_HOUSING = 'HO'
     ROOMS_TYPE_ONEROOM = 'OR'
@@ -23,35 +29,16 @@ class Rooms(models.Model):
         (ROOMS_TYPE_GUESTHOUSE, '게스트하우스'),
     )
 
-    # 숙소 이름
-    rooms_name = models.CharField(max_length=70)
+    # rooms = models.ForeignKey(
+    #     Rooms,
+    #     on_delete=models.CASCADE,
+    #     related_name='with_rooms'
+    # )
 
-    # 태그
-    rooms_tag = models.CharField(max_length=50)
-
-    # 호스트
-    rooms_host = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+    rooms = models.ForeignKey(
+        Rooms,
         on_delete=models.CASCADE,
-        related_name='with_host_rooms',
     )
-
-    # 커버 이미지
-    image_cover = models.ImageField(
-        upload_to='room_image_cover',
-        blank=True,
-    )
-
-    # 썸네일 이미지, form 사용시 랜더링되지 않음
-    image_cover_thumbnail = ImageSpecField(
-        source='image_cover',
-        processors=[ResizeToFill(308, 206)],
-        format='PNG',
-        options={'quality': 100},
-    )
-
-    # 일일 요금
-    days_price = models.PositiveIntegerField()
 
     # 숙소 설명
     rooms_description = models.CharField(max_length=200)
@@ -83,6 +70,9 @@ class Rooms(models.Model):
 
     # 체크인 최대
     check_in_maximum = models.PositiveSmallIntegerField(default=3)
+
+    # 일일 요금
+    days_price = models.PositiveIntegerField()
 
     # 환불규정
     refund = models.TextField()
@@ -121,30 +111,39 @@ class Rooms(models.Model):
     modified_date = models.DateField(auto_now=True)
 
     def __str__(self):
-        return f'{self.pk} {self.rooms_host} {self.rooms_name}'
+        return f'{self.pk}'
+
+
+class RoomImage(models.Model):
+    """
+    Room Cover image
+    """
+    room = models.ForeignKey(
+        RoomDetail,
+        on_delete=models.CASCADE,
+        related_name='room_images',
+    )
+
+    image_cover = models.ImageField(
+        upload_to='room_image_cover',
+        blank=True,
+    )
+
+    image_cover_thumbnail = ImageSpecField(
+        source='image_cover',
+        processors=[ResizeToFill(308, 206)],
+        format='PNG',
+        options={'quality': 100},
+    )
+
+    def __str__(self):
+        return f'{self.image_cover}'
 
 
 class RoomRules(models.Model):
-    """
-    숙소 이용 규칙
-    """
     room = models.ForeignKey(
-        Rooms,
+        RoomDetail,
         on_delete=models.CASCADE,
         related_name='room_rules'
     )
     rule_list = models.CharField(max_length=50)
-
-
-class RoomImgeList(models.Model):
-    """
-    이미지 리스트
-    """
-    room = models.ForeignKey(
-        Rooms,
-        on_delete=models.CASCADE,
-        related_name='room_image_lists'
-    )
-    room_image_list = models.ImageField(
-        upload_to='room_image_list'
-    )
