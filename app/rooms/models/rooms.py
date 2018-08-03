@@ -3,6 +3,13 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill
 
+__all__ = (
+    'Rooms',
+    'RoomRules',
+    'RoomImageList',
+    'RoomFacilities',
+)
+
 
 class Rooms(models.Model):
     """
@@ -160,7 +167,7 @@ class RoomRules(models.Model):
     rule_list = models.CharField(max_length=50)
 
 
-class RoomImgeList(models.Model):
+class RoomImageList(models.Model):
     """
     이미지 리스트
     """
