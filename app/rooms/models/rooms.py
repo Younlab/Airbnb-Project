@@ -69,7 +69,7 @@ class Rooms(models.Model):
     )
 
     # 숙소 설명
-    rooms_description = models.CharField(
+    rooms_description = models.TextField(
         help_text='당신의 숙소를 소개하세요, 게스트의 흥미를 유발하는것이 중요합니다.',
         max_length=200
     )
@@ -119,28 +119,45 @@ class Rooms(models.Model):
     )
 
     # 나라
-    address_country = models.CharField(max_length=100)
+    address_country = models.CharField(
+        help_text='국가',
+        max_length=30,
+    )
 
     # 도시
-    address_city = models.CharField(max_length=50)
+    address_city = models.CharField(
+        help_text='도시',
+        max_length=50,
+    )
 
     # 시/군/구
-    address_district01 = models.CharField(max_length=100)
+    address_district01 = models.CharField(
+        help_text='시/군/구',
+        max_length=100,
+    )
 
     # 동/읍/면
-    address_district02 = models.CharField(max_length=100)
+    address_district02 = models.CharField(
+        help_text='동/읍/면',
+        max_length=100,
+    )
 
     # 상세주소
-    address_detail = models.CharField(max_length=100)
+    address_detail = models.CharField(
+        help_text='상세 주소',
+        max_length=100,
+    )
 
     # 위도
     address_latitude = models.DecimalField(
+        help_text='Google MAP API 위도',
         decimal_places=14,
         max_digits=16,
     )
 
     # 경도
     address_longitude = models.DecimalField(
+        help_text='Google MAP API 경도',
         decimal_places=14,
         max_digits=17,
     )
