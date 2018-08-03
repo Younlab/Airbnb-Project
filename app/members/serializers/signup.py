@@ -46,18 +46,18 @@ class UserSignupSerializer(serializers.ModelSerializer):
         if validated_data['password'] != validated_data['password_check']:
             raise serializers.ValidationError("비밀번호와 비밀번호 확인이 같지 않습니다.")
         else:
-            members = User.objects.create_user(
+            user = User.objects.create_user(
                 username=self.validated_data['username'],
                 email=self.validated_data['email'],
                 password=self.validated_data['password']
             )
-            members.save()
+            user.save()
 
             message = render_to_string('account_activate_email.html', {
-                'user': members,
+                'user': user,
                 'domain': 'localhost:8000',
-                'uid': urlsafe_base64_encode(force_bytes(members.pk)).decode('utf-8'),
-                'token': account_activation_token.make_token(members)
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+                'token': account_activation_token.make_token(user)
             })
 
             secrets = base.secrets
