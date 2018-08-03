@@ -214,4 +214,4 @@ class RoomFacilities(models.Model):
     )
 
     def __str__(self):
-        return f'{self.facilities}'
+        return self.facilities
