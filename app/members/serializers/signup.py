@@ -62,7 +62,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
             secrets = base.secrets
             mail_subject = 'test'
-            to_email = secrets['EMAIL_HOST_USER']
+            to_email = validated_data['email']
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
