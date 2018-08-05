@@ -20,6 +20,8 @@ djangorestframework = "*"
 awsebcli = "*"
 ipython = "*"
 django-extensions = "*"
+"bs4" = "*"
+lxml = "*"
 
 [requires]
 python_version = "3.6"
