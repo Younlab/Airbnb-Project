@@ -2,7 +2,7 @@ import os
 
 import django
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+
 from selenium import webdriver
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -11,6 +11,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
 django.setup()
 User = get_user_model()
 driver = webdriver.Chrome('/Users/sh/Downloads/chromedriver')
+
 
 def crawler():
     city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시',
