@@ -50,7 +50,6 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
     'rooms.apps.RoomsConfig',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'imagekit',
-
     'rest_framework',
     'rest_framework.authtoken',
 
