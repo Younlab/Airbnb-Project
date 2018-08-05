@@ -211,6 +211,9 @@ class RoomImageList(models.Model):
         upload_to='room_image_list'
     )
 
+    def __str__(self):
+        return self.room_image_list
+
 
 class RoomFacilities(models.Model):
     """

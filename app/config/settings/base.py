@@ -38,7 +38,6 @@ EMAIL_HOST_USER = secrets['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = secrets['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -51,7 +50,6 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
     'rooms.apps.RoomsConfig',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'imagekit',
-
     'rest_framework',
     'rest_framework.authtoken',
 
