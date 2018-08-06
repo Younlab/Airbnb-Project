@@ -29,7 +29,7 @@ def crawler():
     for city in city_list:
 
         # 현제 페이지가 끝나면 다음페이지로 이동
-        for num in range(10):
+        for num in range(3):
             num += 1
             url = f'https://www.airbnb.co.kr/s/homes?query={city}&section_offset={num+1}'
             driver.get(url)
