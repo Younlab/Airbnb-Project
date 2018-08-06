@@ -26,6 +26,9 @@ class User(AbstractUser):
     # Phone Number
     phone_number = models.CharField(max_length=50)
 
+    # Birthday
+    birthday = models.CharField(max_length=100)
+
     # Email field
     email = models.EmailField()
 
