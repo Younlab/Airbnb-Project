@@ -187,12 +187,15 @@ class RoomRules(models.Model):
     """
     숙소 이용 규칙
     """
-    room = models.ForeignKey(
+    room = models.ManyToManyField(
         Rooms,
-        on_delete=models.CASCADE,
-        related_name='room_rules'
+        related_name='room_rules',
+        blank=True
     )
     rule_list = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.rule_list
 
 
 class RoomImageList(models.Model):
@@ -217,15 +220,13 @@ class RoomFacilities(models.Model):
     """
     편의시설 리스트
     """
-    room = models.ForeignKey(
+    room = models.ManyToManyField(
         Rooms,
-        on_delete=models.CASCADE,
         related_name='room_facilities'
     )
 
     facilities = models.CharField(
         max_length=50,
-        unique=True,
     )
 
     def __str__(self):

@@ -8,7 +8,15 @@ from rooms.models import Rooms
 
 
 class UserManager(DjangoUserManager):
-    pass
+    def create_django_user(self, *args, **kwargs):
+        user = User.objects.create_user(
+            username=kwargs.get('username'),
+            email=kwargs.get('email'),
+            password=kwargs.get('password'),
+            first_name=kwargs.get('first_name', ''),
+            phone_number=kwargs.get('phone_number', ''),
+        )
+        return user
 
 
 class User(AbstractUser):

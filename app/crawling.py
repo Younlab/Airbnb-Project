@@ -58,9 +58,11 @@ def crawler():
                 rooms_name = soup.select_one('h1._1xu9tpch').get_text(strip=True)
 
                 # room price
-                rooms_price_source = soup.select_one('span._doc79r').get_text(strip=True)
-                rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
-                rooms_price = ''.join(rooms_price_parse)
+
+                rooms_price_source = soup.select_one('span._doc79r > span').get_text(strip=True)
+                # rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
+                rooms_price = re.findall('(\d)', rooms_price_source)[0]
+                # rooms_price = ''.join(rooms_price_parse)
 
                 # 디테일 페이지 커버 이미지
                 room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
@@ -179,7 +181,7 @@ def crawler():
                     'rooms_name': rooms_name,
                     'rooms_tag': location_tag,
                     'rooms_host': user,
-                    'image_cover': room_detail_image_cover_source,
+                    'image_cover': room_detail_image_cover,
                     'days_price': rooms_price,
                     'rooms_description': rooms_discription,
                     'rooms_amount': rooms_amount,
@@ -200,11 +202,15 @@ def crawler():
                     rooms_name=rooms_data['rooms_name'],
                     defaults=rooms_data,
                 )
-                rooms.image_cover.save('rooms_cover_image',
+                rooms.image_cover.save('rooms_cover_image.png',
                                        ContentFile(requests.get(rooms_data['image_cover']).content))
+                for facilities_add in rooms_facilities:
+                    rooms.room_facilities.update_or_create(facilities=facilities_add)
+                    rooms.save()
 
-                rooms.room_facilities(rooms_facilities)
-                rooms.room_rules(rooms_rules)
+                for rules_add in rooms_rules:
+                    rooms.room_rules.update_or_create(rule_list=rules_add)
+                    rooms.save()
 
                 if rooms_created is True:
                     print(f'{rooms_name} 생성 완료')
