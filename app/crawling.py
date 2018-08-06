@@ -29,7 +29,7 @@ def crawler():
     for city in city_list:
 
         # 현제 페이지가 끝나면 다음페이지로 이동
-        for num in range(10):
+        for num in range(3):
             num += 1
             url = f'https://www.airbnb.co.kr/s/homes?query={city}&section_offset={num+1}'
             driver.get(url)
@@ -58,11 +58,13 @@ def crawler():
                 rooms_name = soup.select_one('h1._1xu9tpch').get_text(strip=True)
 
                 # room price
-
-                rooms_price_source = soup.select_one('span._doc79r > span').get_text(strip=True)
-                # rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
-                rooms_price = re.findall('(\d)', rooms_price_source)[0]
-                # rooms_price = ''.join(rooms_price_parse)
+                try:
+                    rooms_price_source = soup.select_one('span._doc79r > span').get_text(strip=True)
+                    # rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
+                    rooms_price_parse = re.findall('(\d)', rooms_price_source)
+                    rooms_price = ''.join(rooms_price_parse)
+                except:
+                    rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
                 room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
@@ -73,15 +75,19 @@ def crawler():
                 rooms_host_first_name = listing_dict['user']['host_name']
                 rooms_host_profile_img = listing_dict['user']['profile_pic_path']
 
-                # 지역 테그
-                location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
-
-                # 숙박 인원
-                rooms_personnel_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(1) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_personnel = re.findall('(\d)', rooms_personnel_source)[0]
-
+                try:
+                    # 지역 테그
+                    location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
+                except:
+                    location_tag = ''
+                try:
+                    # 숙박 인원
+                    rooms_personnel_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(1) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_personnel = re.findall('(\d)', rooms_personnel_source)[0]
+                except:
+                    rooms_personnel = 1
                 # 객실 수
                 try:
                     rooms_amount_source = soup.select_one(
@@ -92,17 +98,22 @@ def crawler():
                     rooms_amount = 1
 
                 # 샤워실 갯수
-                rooms_bathroom_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(4) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_bathroom = re.findall('(\d)', rooms_bathroom_source)[0]
+                try:
+                    rooms_bathroom_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(4) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_bathroom = re.findall('(\d)', rooms_bathroom_source)[0]
+                except:
+                    rooms_bathroom = 1
 
-                # 침대 갯수
-                rooms_bed_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(3) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_bed = re.findall('(\d)', rooms_bed_source)[0]
-
+                try:
+                    # 침대 갯수
+                    rooms_bed_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(3) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_bed = re.findall('(\d)', rooms_bed_source)[0]
+                except:
+                    rooms_bed = 1
                 # 숙소 개요
                 rooms_discription = soup.select_one('div#details > div > div > div').get_text(strip=True)
 
@@ -130,9 +141,21 @@ def crawler():
 
                 # 주소
                 country = address_list[length - 1]
-                citys = address_list[length - 2]
-                district = listing_dict['localized_city']
-                address1 = address_list[0] if length > 3 else ''
+
+                try:
+                    citys = address_list[length - 2]
+                except:
+                    citys = ''
+
+                try:
+                    district = listing_dict['localized_city']
+                except:
+                    district = ''
+
+                try:
+                    address1 = address_list[0] if length > 3 else ''
+                except:
+                    address1 = ''
 
                 # 위도, 경도
                 lat = listing_dict['lat']
@@ -167,14 +190,14 @@ def crawler():
                     'email': rooms_host_first_name + '@airbnb.net',
                     'phone_number': '01000000000',
                     'profile_image': rooms_host_profile_img,
-
                 }
                 try:
                     user = User.objects.get(username=user_data['username'])
                 except:
                     user = User.objects.create_django_user(**user_data)
                     user.is_host = True
-                    user.profile_image = ContentFile(requests.get(user_data['profile_image']).content)
+                    user.profile_image.save('profile_image.png',
+                                            ContentFile(requests.get(user_data['profile_image']).content))
                     user.save()
 
                 rooms_data = {
@@ -214,7 +237,10 @@ def crawler():
 
                 if rooms_created is True:
                     print(f'{rooms_name} 생성 완료')
+                else:
+                    print(f'{rooms_name} 업데이트 완료')
 
+    print('크롤링 완료')
 
 if __name__ == '__main__':
     crawler()
