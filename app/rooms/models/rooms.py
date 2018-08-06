@@ -39,7 +39,7 @@ class Rooms(models.Model):
     rooms_tag = models.CharField(
         verbose_name='태그',
         help_text='검색에 사용될 지역 태그를 입력하세요',
-        max_lengt=20,
+        max_length=20,
     )
 
     # 호스트
@@ -139,24 +139,28 @@ class Rooms(models.Model):
     address_country = models.CharField(
         verbose_name='국가',
         max_length=30,
+        blank=True
     )
 
     # 도시
     address_city = models.CharField(
         verbose_name='도시',
         max_length=50,
+        blank=True
     )
 
     # 시/군/구
     address_district = models.CharField(
         verbose_name='시/군/구',
-        max_length=100,
+        max_length=150,
+        blank=True
     )
 
     # 상세주소
     address_detail = models.CharField(
         verbose_name='상세 주소',
-        max_length=100,
+        max_length=150,
+        blank=True
     )
 
     # 위도
