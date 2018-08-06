@@ -167,14 +167,14 @@ def crawler():
                     'email': rooms_host_first_name + '@airbnb.net',
                     'phone_number': '01000000000',
                     'profile_image': rooms_host_profile_img,
-
                 }
                 try:
                     user = User.objects.get(username=user_data['username'])
                 except:
                     user = User.objects.create_django_user(**user_data)
                     user.is_host = True
-                    user.profile_image = ContentFile(requests.get(user_data['profile_image']).content)
+                    user.profile_image.save('profile_image.png',
+                                            ContentFile(requests.get(user_data['profile_image']).content))
                     user.save()
 
                 rooms_data = {
