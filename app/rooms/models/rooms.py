@@ -39,7 +39,7 @@ class Rooms(models.Model):
     rooms_tag = models.CharField(
         verbose_name='태그',
         help_text='검색에 사용될 지역 태그를 입력하세요',
-        max_length=50,
+        max_length=100,
     )
 
     # 호스트

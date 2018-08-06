@@ -58,11 +58,13 @@ def crawler():
                 rooms_name = soup.select_one('h1._1xu9tpch').get_text(strip=True)
 
                 # room price
-
-                rooms_price_source = soup.select_one('span._doc79r > span').get_text(strip=True)
-                # rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
-                rooms_price = re.findall('(\d)', rooms_price_source)[0]
-                # rooms_price = ''.join(rooms_price_parse)
+                try:
+                    rooms_price_source = soup.select_one('span._doc79r > span').get_text(strip=True)
+                    # rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
+                    rooms_price_parse = re.findall('(\d)', rooms_price_source)
+                    rooms_price = ''.join(rooms_price_parse)
+                except:
+                    rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
                 room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
