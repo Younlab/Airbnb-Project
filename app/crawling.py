@@ -38,6 +38,7 @@ def crawler():
                 rooms_id_list.append(room_id.get('href'))
 
             detail_url = 'https://www.airbnb.co.kr'
+
             for detail in rooms_id_list:
                 driver.get(detail_url + detail)
                 html = driver.page_source
@@ -115,7 +116,7 @@ def crawler():
 
                 # 주소
                 country = address_list[length - 1]
-                city = address_list[length - 2]
+                citys = address_list[length - 2]
                 district = listing_dict['localized_city']
                 address1 = address_list[0] if length > 3 else ''
 
@@ -123,10 +124,25 @@ def crawler():
                 lat = listing_dict['lat']
                 lng = listing_dict['lng']
 
-            print('detail cover image :', room_detail_image_cover)
-            print('room host id :', rooms_host_id)
-            print('room host first name :', rooms_host_first_name)
-            print('room host profile image :', rooms_host_profile_img)
+                print('detail cover image :', room_detail_image_cover)
+                print('room host id :', rooms_host_id)
+                print('room host first name :', rooms_host_first_name)
+                print('room host profile image :', rooms_host_profile_img)
+                print('location tag :', location_tag)
+                print('숙박 인원 :', rooms_personnel)
+                print('객실 수 :', rooms_amount)
+                print('샤워실 수 :', rooms_bathroom)
+                print('침대 수 :', rooms_bed)
+                print('숙소 개요 :', rooms_discription)
+                print('편의시설 :', rooms_facilities)
+                print('숙소 이용 규칙 :', rooms_rules)
+                print('최소 예약 가능일 :', minimum_check_in_duration)
+                print('국가 :', country)
+                print('도시 :', citys)
+                print('시/군/구 :', district)
+                print('상세주소 :', address1)
+                print('위도 :', lat)
+                print('경도 :', lng)
 
 
 if __name__ == '__main__':
