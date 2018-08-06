@@ -25,7 +25,7 @@ class User(AbstractUser):
     profile_image = ProcessedImageField(
         upload_to='profile_image',
         processors=[Thumbnail(100, 100)],
-        format='JPEG',
+        format='png',
         options={'quality': 100},
         blank=True,
     )
