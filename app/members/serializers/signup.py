@@ -15,16 +15,14 @@ User = get_user_model()
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
-    # serializer에는 password_check가 없기에 비교해줄 필드를 임의로 만듬
-    password_check = serializers.CharField(max_length=100, write_only=True)
 
     class Meta:
         model = User
         fields = (
             'username',
             'email',
-            'password',
-            'password_check',
+            'birthday',
+            'password'
         )
 
     # db에 유저가 존재할경우 에러발생
@@ -43,27 +41,26 @@ class UserSignupSerializer(serializers.ModelSerializer):
     # create_user로 user값 생성
     # create로 만들경우 해싱된 값이 아닌 user가 쓴 값이 그대로 들어감
     def create(self, validated_data):
-        if validated_data['password'] != validated_data['password_check']:
-            raise serializers.ValidationError("비밀번호와 비밀번호 확인이 같지 않습니다.")
-        else:
-            user = User.objects.create_user(
-                username=self.validated_data['username'],
-                email=self.validated_data['email'],
-                password=self.validated_data['password']
-            )
-            user.save()
 
-            message = render_to_string('account_activate_email.html', {
-                'user': user,
-                'domain': 'leesoo.kr',
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
-                'token': account_activation_token.make_token(user)
-            })
+        user = User.objects.create_user(
+            username=self.validated_data['username'],
+            email=self.validated_data['email'],
+            birthday=self.validated_data['birthday'],
+            password=self.validated_data['password']
+        )
+        user.save()
 
-            secrets = base.secrets
-            mail_subject = 'test'
-            to_email = validated_data['email']
-            email = EmailMessage(mail_subject, message, to=[to_email])
-            email.send()
+        message = render_to_string('account_activate_email.html', {
+            'user': user,
+            'domain': 'leesoo.kr',
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+            'token': account_activation_token.make_token(user)
+        })
+
+        # secrets = base.secrets
+        mail_subject = 'test'
+        to_email = validated_data['email']
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
 
         return validated_data

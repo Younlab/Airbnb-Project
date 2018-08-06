@@ -26,6 +26,9 @@ class User(AbstractUser):
     # Phone Number
     phone_number = models.CharField(max_length=50)
 
+    # Birthday
+    birthday = models.CharField(max_length=100)
+
     # Email field
     email = models.EmailField()
 
@@ -38,7 +41,7 @@ class User(AbstractUser):
 
     likes_posts = models.ManyToManyField(
         Rooms,
-        blank=True,
+        # blank=True,
         related_name='like_posts',
         related_query_name='like_posts',
     )
