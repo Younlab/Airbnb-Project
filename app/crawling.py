@@ -77,13 +77,14 @@ def crawler():
 
                 # 지역 테그
                 location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
-
-                # 숙박 인원
-                rooms_personnel_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(1) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_personnel = re.findall('(\d)', rooms_personnel_source)[0]
-
+                try:
+                    # 숙박 인원
+                    rooms_personnel_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(1) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_personnel = re.findall('(\d)', rooms_personnel_source)[0]
+                except:
+                    rooms_personnel = 1
                 # 객실 수
                 try:
                     rooms_amount_source = soup.select_one(
@@ -94,17 +95,22 @@ def crawler():
                     rooms_amount = 1
 
                 # 샤워실 갯수
-                rooms_bathroom_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(4) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_bathroom = re.findall('(\d)', rooms_bathroom_source)[0]
+                try:
+                    rooms_bathroom_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(4) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_bathroom = re.findall('(\d)', rooms_bathroom_source)[0]
+                except:
+                    rooms_bathroom = 1
 
-                # 침대 갯수
-                rooms_bed_source = soup.select_one(
-                    'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(3) > div > div:nth-of-type(2) > span').get_text(
-                    strip=True)
-                rooms_bed = re.findall('(\d)', rooms_bed_source)[0]
-
+                try:
+                    # 침대 갯수
+                    rooms_bed_source = soup.select_one(
+                        'div#summary > div > div > div:nth-of-type(2) > div > div:nth-of-type(3) > div > div:nth-of-type(2) > span').get_text(
+                        strip=True)
+                    rooms_bed = re.findall('(\d)', rooms_bed_source)[0]
+                except:
+                    rooms_bed = 1
                 # 숙소 개요
                 rooms_discription = soup.select_one('div#details > div > div > div').get_text(strip=True)
 
