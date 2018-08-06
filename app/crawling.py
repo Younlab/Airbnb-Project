@@ -10,12 +10,12 @@ from django.core.files.base import ContentFile
 
 from selenium import webdriver
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
+django.setup()
 from rooms.models import Rooms
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
-django.setup()
 User = get_user_model()
 driver = webdriver.Chrome('/Users/sh/Downloads/chromedriver')
 
@@ -55,7 +55,7 @@ def crawler():
                 listing_dict = bootstrap_json['bootstrapData']['reduxData']['homePDP']['listingInfo']['listing']
 
                 # room name
-                rooms_name = soup.select_one('div._1xu9tpch:nth-of-type(1)').get_text(strip=True)
+                rooms_name = soup.select_one('h1._1xu9tpch').get_text(strip=True)
 
                 # room price
                 rooms_price_source = soup.select_one('span._doc79r').get_text(strip=True)
