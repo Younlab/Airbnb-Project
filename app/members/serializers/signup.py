@@ -55,14 +55,14 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
             message = render_to_string('account_activate_email.html', {
                 'user': user,
-                'domain': 'leesoo.kr',
+                'domain': 'localhost:8000',
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
                 'token': account_activation_token.make_token(user)
             })
 
             secrets = base.secrets
             mail_subject = 'test'
-            to_email = validated_data['email']
+            to_email = secrets["EMAIL_HOST_USER"]
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 

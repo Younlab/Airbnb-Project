@@ -1,8 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Rooms, RoomDetail, RoomImage
+from .models import Rooms
 
 admin.site.register(Rooms)
-admin.site.register(RoomDetail)
-admin.site.register(RoomImage)
