@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     likes_posts = models.ManyToManyField(
         Rooms,
-        blank=True,
+        # blank=True,
         related_name='like_posts',
         related_query_name='like_posts',
     )
