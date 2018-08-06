@@ -75,8 +75,11 @@ def crawler():
                 rooms_host_first_name = listing_dict['user']['host_name']
                 rooms_host_profile_img = listing_dict['user']['profile_pic_path']
 
-                # 지역 테그
-                location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
+                try:
+                    # 지역 테그
+                    location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
+                except:
+                    location_tag = ''
                 try:
                     # 숙박 인원
                     rooms_personnel_source = soup.select_one(
