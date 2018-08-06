@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from members.serializers.user import UserSerializer
 from ..models import Rooms
 
 
@@ -7,20 +8,28 @@ class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = (
-            'host',
+            'rooms_host',
             'rooms_name',
-            'tag'
+            'rooms_tag'
         )
 
+
+
 class RoomDetailSerializer(serializers.ModelSerializer):
+    rooms_host = UserSerializer(read_only=True)
+    image_cover = serializers.ImageField(required=False)
+    image_cover_thumbnail = serializers.ImageField(read_only=True)
+    room_rules = serializers.CharField()
 
     class Meta:
         model = Rooms
         fields = (
+            'pk',
             'rooms_name',
             'rooms_tag',
             'rooms_host',
             'image_cover',
+            'image_cover_thumbnail',
             'days_price',
             'rooms_description',
             'rooms_amount',
@@ -39,5 +48,8 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'address_longitude',
             'room_facilities',
             'room_rules',
-
         )
+
+
+
+

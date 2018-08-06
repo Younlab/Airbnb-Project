@@ -242,5 +242,6 @@ def crawler():
 
     print('크롤링 완료')
 
+
 if __name__ == '__main__':
     crawler()

@@ -132,7 +132,7 @@ class Rooms(models.Model):
         verbose_name='환불 규정',
         help_text='환불 규정을 가급적 상세히 입력해주세요',
         blank=True,
-        default=''
+        default='유연 정책 - 48시간 이내 예약 취소 시 취소 수수료 없음, 예약 후 48시간 이내에 취소하면 전액이 환불됩니다.'
     )
 
     # 나라
