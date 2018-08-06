@@ -60,7 +60,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
                 'token': account_activation_token.make_token(user)
             })
 
-            secrets = base.secrets
+            # secrets = base.secrets
             mail_subject = 'test'
             to_email = validated_data['email']
             email = EmailMessage(mail_subject, message, to=[to_email])
