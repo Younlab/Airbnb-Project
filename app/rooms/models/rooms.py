@@ -124,12 +124,15 @@ class Rooms(models.Model):
         verbose_name='최대 숙박 가능일',
         help_text='최대 숙박 가능일 수를 입력해주세요',
         default=3,
+        blank=True,
     )
 
     # 환불규정
     refund = models.TextField(
         verbose_name='환불 규정',
-        help_text='환불 규정을 가급적 상세히 입력해주세요'
+        help_text='환불 규정을 가급적 상세히 입력해주세요',
+        blank=True,
+        default=''
     )
 
     # 나라
@@ -145,14 +148,8 @@ class Rooms(models.Model):
     )
 
     # 시/군/구
-    address_district01 = models.CharField(
+    address_district = models.CharField(
         verbose_name='시/군/구',
-        max_length=100,
-    )
-
-    # 동/읍/면
-    address_district02 = models.CharField(
-        verbose_name='동/읍/면',
         max_length=100,
     )
 
@@ -205,7 +202,8 @@ class RoomImageList(models.Model):
     room = models.ForeignKey(
         Rooms,
         on_delete=models.CASCADE,
-        related_name='room_image_lists'
+        related_name='room_image_lists',
+        blank=True,
     )
     room_image_list = models.ImageField(
         upload_to='room_image_list'

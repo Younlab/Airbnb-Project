@@ -3,10 +3,14 @@ import os
 import re
 
 import django
+import requests
 from bs4 import BeautifulSoup
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 
 from selenium import webdriver
+
+from rooms.models import Rooms
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -49,6 +53,14 @@ def crawler():
                     html)
                 bootstrap_json = json.loads(bootstrap_data.group(1))
                 listing_dict = bootstrap_json['bootstrapData']['reduxData']['homePDP']['listingInfo']['listing']
+
+                # room name
+                rooms_name = soup.select_one('div._1xu9tpch:nth-of-type(1)').get_text(strip=True)
+
+                # room price
+                rooms_price_source = soup.select_one('span._doc79r').get_text(strip=True)
+                rooms_price_parse = re.findall(r'[^₩\W]', rooms_price_source)
+                rooms_price = ''.join(rooms_price_parse)
 
                 # 디테일 페이지 커버 이미지
                 room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
@@ -124,6 +136,8 @@ def crawler():
                 lat = listing_dict['lat']
                 lng = listing_dict['lng']
 
+                print('rooms name :', rooms_name)
+                print('rooms price :', rooms_price)
                 print('detail cover image :', room_detail_image_cover)
                 print('room host id :', rooms_host_id)
                 print('room host first name :', rooms_host_first_name)
@@ -143,6 +157,57 @@ def crawler():
                 print('상세주소 :', address1)
                 print('위도 :', lat)
                 print('경도 :', lng)
+
+                user_data = {
+                    'username': rooms_host_id,
+                    'password': rooms_host_id,
+                    'first_name': rooms_host_first_name,
+                    'email': rooms_host_first_name + '@airbnb.net',
+                    'phone_number': '01000000000',
+                    'profile_image': rooms_host_profile_img,
+
+                }
+                try:
+                    user = User.objects.get(username=user_data['username'])
+                except:
+                    user = User.objects.create_django_user(**user_data)
+                    user.is_host = True
+                    user.profile_image = ContentFile(requests.get(user_data['profile_image']).content)
+                    user.save()
+
+                rooms_data = {
+                    'rooms_name': rooms_name,
+                    'rooms_tag': location_tag,
+                    'rooms_host': user,
+                    'image_cover': room_detail_image_cover_source,
+                    'days_price': rooms_price,
+                    'rooms_description': rooms_discription,
+                    'rooms_amount': rooms_amount,
+                    'rooms_bed': rooms_bed,
+                    'rooms_personnel': rooms_personnel,
+                    'rooms_bathroom': rooms_bathroom,
+                    'check_in_minimum': minimum_check_in_duration,
+                    'address_country': country,
+                    'address_city': citys,
+                    'address_district': district,
+                    'address_detail': address1,
+                    'address_latitude': lat,
+                    'address_longitude': lng,
+
+                }
+
+                rooms, rooms_created = Rooms.objects.update_or_create(
+                    rooms_name=rooms_data['rooms_name'],
+                    defaults=rooms_data,
+                )
+                rooms.image_cover.save('rooms_cover_image',
+                                       ContentFile(requests.get(rooms_data['image_cover']).content))
+
+                rooms.room_facilities(rooms_facilities)
+                rooms.room_rules(rooms_rules)
+
+                if rooms_created is True:
+                    print(f'{rooms_name} 생성 완료')
 
 
 if __name__ == '__main__':
