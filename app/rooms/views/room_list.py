@@ -9,6 +9,6 @@ class RoomsList(generics.ListAPIView):
     serializer_class = RoomListSerializer
 
 
-class RoomDetail(generics.ListAPIView):
+class RoomsDetail(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomDetailSerializer

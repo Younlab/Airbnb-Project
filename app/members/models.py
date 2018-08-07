@@ -8,7 +8,15 @@ from rooms.models import Rooms
 
 
 class UserManager(DjangoUserManager):
-    pass
+    def create_django_user(self, *args, **kwargs):
+        user = User.objects.create_user(
+            username=kwargs.get('username'),
+            email=kwargs.get('email'),
+            password=kwargs.get('password'),
+            first_name=kwargs.get('first_name', ''),
+            phone_number=kwargs.get('phone_number', ''),
+        )
+        return user
 
 
 class User(AbstractUser):
@@ -17,7 +25,7 @@ class User(AbstractUser):
     profile_image = ProcessedImageField(
         upload_to='profile_image',
         processors=[Thumbnail(100, 100)],
-        format='JPEG',
+        format='png',
         options={'quality': 100},
         blank=True,
     )
@@ -41,7 +49,7 @@ class User(AbstractUser):
 
     likes_posts = models.ManyToManyField(
         Rooms,
-        blank=True,
+        # blank=True,
         related_name='like_posts',
         related_query_name='like_posts',
     )
