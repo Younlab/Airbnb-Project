@@ -11,3 +11,9 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_name',
             'tag'
         )
+
+
+class RoomDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rooms
+        fields = '__all__'
