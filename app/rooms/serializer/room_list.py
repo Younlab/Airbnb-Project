@@ -4,12 +4,13 @@ from ..models import Rooms
 
 
 class RoomListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Rooms
         fields = (
-            'host',
+            'rooms_host',
             'rooms_name',
-            'tag'
+            'rooms_tag'
         )
 
 
