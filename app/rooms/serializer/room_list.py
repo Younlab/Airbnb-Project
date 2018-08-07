@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from members.serializers.user import UserSerializer
+from rooms.models.rooms import RoomReservation
 from ..models import Rooms
 
 
@@ -12,7 +13,6 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_name',
             'rooms_tag'
         )
-
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
@@ -48,8 +48,20 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'address_longitude',
             'room_facilities',
             'room_rules',
+            'room_reservations',
         )
 
 
+class RoomReservationSerializer(serializers.ModelSerializer):
+    checkin = serializers.DateField()
+    checkout = serializers.DateField()
 
-
+    class Meta:
+        model = RoomReservation
+        fields = (
+            'pk',
+            'room',
+            'guest',
+            'checkin',
+            'checkout',
+        )
