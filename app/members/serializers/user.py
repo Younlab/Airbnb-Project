@@ -15,3 +15,15 @@ class UserSerializer(serializers.ModelSerializer):
             'is_host',
             'likes_posts',
         )
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'profile_image',
+            'phone_number',
+            'birthday',
+            'email',
+            'is_host',
+        )
