@@ -18,3 +18,18 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = '__all__'
+
+
+class RoomReservationSerializer(serializers.ModelSerializer):
+    checkin = serializers.DateField()
+    checkout = serializers.DateField()
+
+    class Meta:
+        model = RoomReservation
+        fields = (
+            'pk',
+            'room',
+            'guest',
+            'checkin',
+            'checkout',
+        )

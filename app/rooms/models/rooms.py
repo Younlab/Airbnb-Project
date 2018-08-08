@@ -235,3 +235,37 @@ class RoomFacilities(models.Model):
 
     def __str__(self):
         return self.facilities
+
+class RoomReservation(models.Model):
+    """
+    예약 등록
+    """
+    room = models.ManyToManyField(
+        Rooms,
+        related_name='room_reservations'
+    )
+
+    guest = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    checkin = models.DateField(
+        blank=True,
+        verbose_name='체크인 날짜',
+        unique=True,
+    )
+
+    checkout = models.DateField(
+        blank=True,
+        verbose_name='체크아웃 날짜',
+        unique=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.guest}, {self.checkin}, {self.checkout}'
