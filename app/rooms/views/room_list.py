@@ -9,7 +9,7 @@ class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    filter_fields = ('rooms_tag', 'rooms_host')
+    filter_fields = ('rooms_name', 'rooms_tag', 'rooms_host', 'rooms_bed', 'rooms_amount', 'rooms_personnel')
 
 
 class RoomsDetail(generics.RetrieveAPIView):
@@ -17,7 +17,7 @@ class RoomsDetail(generics.RetrieveAPIView):
     serializer_class = RoomDetailSerializer
 
 
-class RoomReservation(generics.ListAPIView):
+class RoomReservation(generics.ListCreateAPIView):
     queryset = RoomReservation.objects.all()
     serializer_class = RoomReservationSerializer
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
