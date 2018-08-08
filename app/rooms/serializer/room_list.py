@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
+from ..models.rooms import RoomReservation
 from ..models import Rooms
 
 
 class RoomListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Rooms
         fields = (
@@ -26,10 +26,4 @@ class RoomReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomReservation
-        fields = (
-            'pk',
-            'room',
-            'guest',
-            'checkin',
-            'checkout',
-        )
+        fields = '__all__'
