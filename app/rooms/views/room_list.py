@@ -1,16 +1,24 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics
+from rest_framework import generics, status
 import django_filters
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
 from ..models.rooms import RoomReservation
 from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer
 from ..models import Rooms
 
 User = get_user_model()
 
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 18
+    page_size_query_param = 'page'
+    max_page_size = 1000
 
 class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
+    pagination_class = LargeResultsSetPagination
 
 
 class RoomsDetail(generics.ListAPIView):
@@ -24,17 +32,11 @@ class RoomReservation(generics.ListCreateAPIView):
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
     filter_fields = ('room',)
 
-    def get(self, request, *args, **kwargs):
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = RoomReservationSerializer(queryset, many=True)
         if request.user.is_authenticated:
-            return self.list(request, *args, **kwargs)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, *args, **kwargs):
-        """
-        login 한 유저만 예약신청을 할수 있도록,
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        if request.user.is_authenticated:
-            return self.create(request, *args, **kwargs)
