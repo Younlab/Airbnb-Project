@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3cec09c541ca51d0e7b4705904fe5057d97922563e6c2c87455b51e07ea161fa"
+            "sha256": "209147f9bb68c40fa14b8bf4c9fa461f019424b4c17b544b04953f81c96c2250"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,18 +33,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:37853caa02f7141d7b1fb2537cc878bc58d2b1386224e3cf551af7f6ae3e4893",
-                "sha256:d0d849de20c938519df29e52d64210b408a67a20491e1e7d151588a60deef488"
+                "sha256:126451821f990dea356d3bf53788f50d869f6cdfb258c0f402f20c36eb64e179",
+                "sha256:dc6e42f53218acd13035f90437cd3ae2080076c41eecfa466264641700d18e5e"
             ],
             "index": "pypi",
-            "version": "==1.7.70"
+            "version": "==1.7.72"
         },
         "botocore": {
             "hashes": [
-                "sha256:58b469e347865277e9713326709949f427f312eb9f64e5703de7128a6a90a5ad",
-                "sha256:7a3759d346bf297d33091a4c154d3c50f0c3dc7b428badb6c950f87ea390e5b1"
+                "sha256:5c282b9a6f694ce62e5fc9f0d5aa019c2d977509058f588416f1c8cc1ad78a0b",
+                "sha256:9857181af3f5c6784fb6a028eeb01d9681ec2202162625590c215539598fc1aa"
             ],
-            "version": "==1.10.70"
+            "version": "==1.10.72"
         },
         "decorator": {
             "hashes": [
@@ -75,6 +75,14 @@
             ],
             "index": "pypi",
             "version": "==2.1.0"
+        },
+        "django-filter": {
+            "hashes": [
+                "sha256:6f4e4bc1a11151178520567b50320e5c32f8edb552139d93ea3e30613b886f56",
+                "sha256:86c3925020c27d072cdae7b828aaa5d165c2032a629abbe3c3a1be1edae61c58"
+            ],
+            "index": "pypi",
+            "version": "==2.0.0"
         },
         "django-imagekit": {
             "hashes": [
@@ -357,10 +365,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:58b469e347865277e9713326709949f427f312eb9f64e5703de7128a6a90a5ad",
-                "sha256:7a3759d346bf297d33091a4c154d3c50f0c3dc7b428badb6c950f87ea390e5b1"
+                "sha256:5c282b9a6f694ce62e5fc9f0d5aa019c2d977509058f588416f1c8cc1ad78a0b",
+                "sha256:9857181af3f5c6784fb6a028eeb01d9681ec2202162625590c215539598fc1aa"
             ],
-            "version": "==1.10.70"
+            "version": "==1.10.72"
         },
         "bs4": {
             "hashes": [
@@ -423,7 +431,6 @@
                 "sha256:52cf5b1c3c394f9abf897638bfc3336d6b63a0f65969d0d4d2da6d3b1d8032b6",
                 "sha256:ad077b49660b711d20f50f344f70cfae014d635ef094bf21b0d7df5f0aeedf99"
             ],
-            "markers": "python_version != '3.2.*' and python_version != '3.1.*' and python_version != '3.3.*' and python_version >= '2.6' and python_version != '3.0.*' and python_version < '4'",
             "version": "==3.4.1"
         },
         "docker-compose": {
