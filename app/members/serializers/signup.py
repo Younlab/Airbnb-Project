@@ -19,17 +19,11 @@ class UserSignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'name',
             'username',
-            'email',
             'birthday',
             'password'
         )
-
-    # db에 유저가 존재할경우 에러발생
-    def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("이미 있는 아이디 입니다. 다른 아이디를 입력하세요")
-        return value
 
     # password의 길이가 8글자 아래일 경우 에러발생
     def validate_password(self, value):
@@ -43,8 +37,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         user = User.objects.create_user(
+            name=self.validated_data['name'],
             username=self.validated_data['username'],
-            email=self.validated_data['email'],
             birthday=self.validated_data['birthday'],
             password=self.validated_data['password']
         )
@@ -59,7 +53,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
         # secrets = base.secrets
         mail_subject = 'test'
-        to_email = validated_data['email']
+        to_email = validated_data['username']
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
 

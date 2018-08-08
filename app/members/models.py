@@ -38,7 +38,10 @@ class User(AbstractUser):
     birthday = models.CharField(max_length=100, blank=True)
 
     # Email field
-    email = models.EmailField(blank=True)
+    username = models.EmailField(unique=True)
+
+    # Name field
+    name = models.CharField(max_length=100)
 
     # facebook 가입자는 자동으로 True 표시 되게끔 구현하기
     is_facebook_user = models.BooleanField(default=False)

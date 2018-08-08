@@ -25,4 +25,4 @@ class UserLogin(APIView):
                 'user': UserSerializer(user).data,
             }
             return Response(data)
-        raise serializers.ValidationError("인증되지 않은 아이디 입니다.")
+        raise serializers.ValidationError("인증되지 않은 이메일 입니다.")

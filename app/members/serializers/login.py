@@ -9,7 +9,7 @@ class UserLoginSerializer(AuthTokenSerializer):
 
     def validate_username(self, value):
         if not User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("존재하지 않는 아이디 입니다.")
+            raise serializers.ValidationError("존재하지 않는 이메일 입니다.")
 
         return value
 
@@ -17,7 +17,7 @@ class UserLoginSerializer(AuthTokenSerializer):
         user = User.objects.get(username=validated_data['username'])
 
         if user.activate is not True:
-            return serializers.ValidationError("인증되지 않은 아이디 입니다.")
+            return serializers.ValidationError("인증되지 않은 이메일 입니다.")
 
         return validated_data
 
