@@ -10,10 +10,12 @@ from ..models import Rooms
 
 User = get_user_model()
 
+
 class LargeResultsSetPagination(PageNumberPagination):
     page_size = 18
     page_size_query_param = 'page'
     max_page_size = 1000
+
 
 class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
@@ -39,4 +41,3 @@ class RoomReservation(generics.ListCreateAPIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
