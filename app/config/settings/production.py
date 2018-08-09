@@ -9,6 +9,7 @@ WSGI_APPLICATION = 'config.wsgi.production.application'
 # django-storages
 INSTALLED_APPS += [
     'storages',
+    'django_extensions',
 ]
 
 DATABASES = secrets['DATABASES']
