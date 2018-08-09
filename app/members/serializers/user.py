@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             'phone_number',
             'birthday',
             'is_host',
+            'create_date',
             'likes_posts',
         )
 
