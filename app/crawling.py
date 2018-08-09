@@ -229,6 +229,7 @@ def crawler():
                 )
                 rooms.image_cover.save('rooms_cover_image.png',
                                        ContentFile(requests.get(rooms_data['image_cover']).content))
+                rooms.save()
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
                     rooms.save()
