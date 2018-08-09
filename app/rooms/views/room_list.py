@@ -16,7 +16,6 @@ class LargeResultsSetPagination(PageNumberPagination):
     page_query_param = 'page'
 
 
-
 class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
