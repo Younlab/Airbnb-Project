@@ -41,14 +41,19 @@ class User(AbstractUser):
     username = models.EmailField(unique=True, verbose_name='이메일', blank=True)
 
     # Name field
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
 
     # facebook 가입자는 자동으로 True 표시 되게끔 구현하기
+    facebook_id = models.CharField(max_length=200)
     is_facebook_user = models.BooleanField(default=False)
 
     # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
     activate = models.BooleanField(default=False)
+
+    # 회원가입 날짜
+    create_date = models.DateField(auto_now_add=True)
 
     likes_posts = models.ManyToManyField(
         Rooms,
