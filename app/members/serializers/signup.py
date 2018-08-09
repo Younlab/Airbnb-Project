@@ -23,7 +23,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'birthday',
-            'password'
+            'password',
+            'create_date',
         )
 
     # password의 길이가 8글자 아래일 경우 에러발생

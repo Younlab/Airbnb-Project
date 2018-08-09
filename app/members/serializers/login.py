@@ -20,7 +20,3 @@ class UserLoginSerializer(AuthTokenSerializer):
             return serializers.ValidationError("인증되지 않은 이메일 입니다.")
 
         return validated_data
-
-
-
-
