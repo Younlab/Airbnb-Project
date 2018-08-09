@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.db import models
-from imagekit.models import ImageSpecField
-from pilkit.processors import ResizeToFill
+
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
 
 __all__ = (
     'Rooms',
@@ -60,12 +61,13 @@ class Rooms(models.Model):
         blank=True,
     )
 
-    # 썸네일 이미지, form 사용시 랜더링되지 않음
-    image_cover_thumbnail = ImageSpecField(
-        source='image_cover',
-        processors=[ResizeToFill(308, 206)],
-        format='PNG',
+    # image thumbail
+    image_cover_thumbnail = ProcessedImageField(
+        upload_to='image_cover_thumbnail',
+        processors=[Thumbnail(308, 206)],
+        format='png',
         options={'quality': 100},
+        blank=True,
     )
 
     # 일일 요금
@@ -236,6 +238,7 @@ class RoomFacilities(models.Model):
 
     def __str__(self):
         return self.facilities
+
 
 class RoomReservation(models.Model):
     """

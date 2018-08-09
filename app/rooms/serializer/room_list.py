@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation
 from ..models import Rooms
 
@@ -18,6 +19,7 @@ class RoomListSerializer(serializers.ModelSerializer):
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
+    rooms_host = UserSerializer()
     class Meta:
         model = Rooms
         fields = '__all__'
