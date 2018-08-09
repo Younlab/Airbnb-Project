@@ -38,7 +38,7 @@ class User(AbstractUser):
     birthday = models.CharField(max_length=100, blank=True)
 
     # Email field
-    username = models.EmailField(unique=True, verbose_name='이메일')
+    username = models.EmailField(unique=True, verbose_name='이메일', blank=True)
 
     # Name field
     name = models.CharField(max_length=100)
