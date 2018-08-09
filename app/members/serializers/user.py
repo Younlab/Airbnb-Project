@@ -24,6 +24,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'profile_image',
             'phone_number',
             'birthday',
-            'email',
+            'username',
             'is_host',
         )
