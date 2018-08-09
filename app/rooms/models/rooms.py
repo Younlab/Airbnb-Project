@@ -40,6 +40,7 @@ class Rooms(models.Model):
         verbose_name='태그',
         help_text='검색에 사용될 지역 태그를 입력하세요',
         max_length=20,
+        blank=True,
     )
 
     # 호스트

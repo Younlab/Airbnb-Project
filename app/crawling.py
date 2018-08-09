@@ -140,22 +140,25 @@ def crawler():
                 minimum_check_in_duration = listing_dict['min_nights']
 
                 # 주소
-                country = address_list[length - 1]
+                try:
+                    country = address_list[length - 1]
+                except:
+                    country = 'null'
 
                 try:
                     citys = address_list[length - 2]
                 except:
-                    citys = ''
+                    citys = 'null'
 
                 try:
                     district = listing_dict['localized_city']
                 except:
-                    district = ''
+                    district = 'null'
 
                 try:
                     address1 = address_list[0] if length > 3 else ''
                 except:
-                    address1 = ''
+                    address1 = 'null'
 
                 # 위도, 경도
                 lat = listing_dict['lat']
@@ -184,10 +187,9 @@ def crawler():
                 print('경도 :', lng)
 
                 user_data = {
-                    'username': rooms_host_id,
+                    'username': rooms_host_first_name + '@airbnb.net',
                     'password': rooms_host_id,
                     'first_name': rooms_host_first_name,
-                    'email': rooms_host_first_name + '@airbnb.net',
                     'phone_number': '01000000000',
                     'profile_image': rooms_host_profile_img,
                 }
@@ -241,6 +243,7 @@ def crawler():
                     print(f'{rooms_name} 업데이트 완료')
 
     print('크롤링 완료')
+
 
 if __name__ == '__main__':
     crawler()

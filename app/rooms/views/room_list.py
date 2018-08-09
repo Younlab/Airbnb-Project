@@ -13,8 +13,8 @@ User = get_user_model()
 
 class LargeResultsSetPagination(PageNumberPagination):
     page_size = 18
-    page_size_query_param = 'page'
-    max_page_size = 1000
+    page_query_param = 'page'
+
 
 
 class RoomsList(generics.ListAPIView):
@@ -23,7 +23,7 @@ class RoomsList(generics.ListAPIView):
     pagination_class = LargeResultsSetPagination
 
 
-class RoomsDetail(generics.ListAPIView):
+class RoomsDetail(generics.RetrieveAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomDetailSerializer
 
