@@ -41,7 +41,8 @@ class User(AbstractUser):
     username = models.EmailField(unique=True, verbose_name='이메일', blank=True)
 
     # Name field
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
 
     # facebook 가입자는 자동으로 True 표시 되게끔 구현하기
     is_facebook_user = models.BooleanField(default=False)

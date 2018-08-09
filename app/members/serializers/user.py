@@ -8,7 +8,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
+            'first_name',
+            'last_name',
             'profile_image',
             'phone_number',
             'birthday',
@@ -18,12 +19,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+
+    # first_name = serializers.CharField(max_length=50, allow_blank=True)
+
     class Meta:
         model = User
         fields = (
             'profile_image',
             'phone_number',
             'birthday',
-            'username',
+            'first_name',
+            'last_name',
             'is_host',
         )
