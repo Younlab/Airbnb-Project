@@ -53,23 +53,6 @@ class Rooms(models.Model):
         related_name='with_host_rooms',
     )
 
-    # # 커버 이미지
-    # image_cover = models.ImageField(
-    #     verbose_name='커버 이미지',
-    #     help_text='게스트에게 소개할 숙소의 커버 이미지를 업로드 해 주세요',
-    #     upload_to='room_image_cover',
-    #     blank=True,
-    # )
-    #
-    # # image thumbail
-    # image_cover_thumbnail = ProcessedImageField(
-    #     upload_to='image_cover_thumbnail',
-    #     processors=[Thumbnail(308, 206)],
-    #     format='png',
-    #     options={'quality': 100},
-    #     blank=True,
-    # )
-
     # 일일 요금
     days_price = models.PositiveIntegerField(
         verbose_name='일일 숙박 요금',
