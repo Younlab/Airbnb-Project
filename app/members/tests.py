@@ -13,6 +13,18 @@ user = {
 }
 
 
+def get_dummy_user():
+    user = User.objects.create_user(
+        username='dummy_username@test.com',
+        first_name='user',
+        last_name='test',
+        birthday='000000',
+        password='test1234',
+    )
+    user.activate = True
+    return user
+
+
 class UserListTest(APITestCase):
     """
     User List 요청에 관한 테스트
