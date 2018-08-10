@@ -12,7 +12,7 @@ from selenium import webdriver
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
 django.setup()
-from rooms.models import Rooms
+from rooms.models import Rooms, RoomImage
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -29,7 +29,7 @@ def crawler():
     for city in city_list:
 
         # 현제 페이지가 끝나면 다음페이지로 이동
-        for num in range(3):
+        for num in range(2):
             num += 1
             url = f'https://www.airbnb.co.kr/s/homes?query={city}&section_offset={num+1}'
             driver.get(url)
@@ -54,6 +54,16 @@ def crawler():
                 bootstrap_json = json.loads(bootstrap_data.group(1))
                 listing_dict = bootstrap_json['bootstrapData']['reduxData']['homePDP']['listingInfo']['listing']
 
+                # image cover list
+                rooms_image_list = []
+                rooms_image_count = 0
+                for image in listing_dict['photos']:
+                    rooms_image_count += 1
+                    print(rooms_image_count)
+                    rooms_image_list.append(image['large'])
+                    if rooms_image_count == 7:
+                        break
+
                 # room name
                 rooms_name = soup.select_one('h1._1xu9tpch').get_text(strip=True)
 
@@ -67,8 +77,8 @@ def crawler():
                     rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
-                room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
-                room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
+                # room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
+                # room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
 
                 # host 정보
                 rooms_host_id = listing_dict['user']['id']
@@ -139,6 +149,15 @@ def crawler():
                 # 최소 예약 가능일
                 minimum_check_in_duration = listing_dict['min_nights']
 
+                # 환불규정
+                refund = '''
+                        일반 정책 \n
+                        More information \n
+                        체크인 5일 전까지 예약을 취소하면 에어비앤비 서비스 수수료을 제외한 요금이 환불됩니다.\n
+                        체크인까지 5일이 남지 않은 시점에 예약을 취소하면 첫 1박 요금과 나머지 숙박 요금의 50%는 환불되지 않습니다. \n
+                        에어비앤비 서비스 수수료는 예약 후 48시간 이내에 취소하고 체크인 전인 경우에만 환불됩니다. \n
+                        '''
+
                 # 주소
                 try:
                     country = address_list[length - 1]
@@ -166,7 +185,8 @@ def crawler():
 
                 print('rooms name :', rooms_name)
                 print('rooms price :', rooms_price)
-                print('detail cover image :', room_detail_image_cover)
+                # print('detail cover image :', room_detail_image_cover)
+                print('room cover image', rooms_image_list)
                 print('room host id :', rooms_host_id)
                 print('room host first name :', rooms_host_first_name)
                 print('room host profile image :', rooms_host_profile_img)
@@ -206,7 +226,7 @@ def crawler():
                     'rooms_name': rooms_name,
                     'rooms_tag': location_tag,
                     'rooms_host': user,
-                    'image_cover': room_detail_image_cover,
+                    # 'image_cover': room_detail_image_cover,
                     'days_price': rooms_price,
                     'rooms_description': rooms_discription,
                     'rooms_amount': rooms_amount,
@@ -214,6 +234,7 @@ def crawler():
                     'rooms_personnel': rooms_personnel,
                     'rooms_bathroom': rooms_bathroom,
                     'check_in_minimum': minimum_check_in_duration,
+                    'refund': refund,
                     'address_country': country,
                     'address_city': citys,
                     'address_district': district,
@@ -227,25 +248,34 @@ def crawler():
                     rooms_name=rooms_data['rooms_name'],
                     defaults=rooms_data,
                 )
-                rooms.image_cover.save('rooms_cover_image.png',
-                                       ContentFile(requests.get(rooms_data['image_cover']).content))
-                rooms.image_cover_thumbnail.save('image_cover_thumbnail.png',
-                                       ContentFile(requests.get(rooms_data['image_cover']).content))
-                rooms.save()
+                print(rooms)
+                # rooms.image_cover.save('rooms_cover_image.png',
+                #                        ContentFile(requests.get(rooms_data['image_cover']).content))
+                # rooms.image_cover_thumbnail.save('image_cover_thumbnail.png',
+                #                                  ContentFile(requests.get(rooms_data['image_cover']).content))
+                # rooms.save()
+
+                for image_add in rooms_image_list:
+                    rooms_images = RoomImage.objects.create(room=rooms)
+                    rooms_images.room_image.save(f'rooms_cover.png',
+                                                 ContentFile(requests.get(image_add).content))
+                    rooms.save()
+
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
-                    rooms.save()
+
+                rooms.save()
 
                 for rules_add in rooms_rules:
                     rooms.room_rules.update_or_create(rule_list=rules_add)
-                    rooms.save()
+                rooms.save()
 
                 if rooms_created is True:
                     print(f'{rooms_name} 생성 완료')
                 else:
                     print(f'{rooms_name} 업데이트 완료')
 
-    print('크롤링 완료')
+                print('크롤링 완료')
 
 
 if __name__ == '__main__':
