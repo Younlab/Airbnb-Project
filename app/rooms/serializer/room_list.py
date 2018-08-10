@@ -13,7 +13,7 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_name',
             'rooms_tag',
             'days_price',
-            # 'image_cover_thumbnail',
+            'image_cover_thumbnail',
 
         )
 
