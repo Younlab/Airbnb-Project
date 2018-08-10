@@ -18,6 +18,3 @@ class UserList(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response('볼수있는 권한이 없습니다.', status=status.HTTP_400_BAD_REQUEST)
-
-
-
