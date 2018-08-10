@@ -20,9 +20,19 @@ class RoomListSerializer(serializers.ModelSerializer):
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
+    guest = settings.AUTH_USER_MODEL
+    checkin = serializers.DateField()
+    checkout = serializers.DateField()
+
     class Meta:
         model = RoomReservation
-        fields = '__all__'
+        fields = (
+            'room',
+            'guest',
+            'checkin',
+            'checkout',
+            'created_at',
+        )
 
 
 class RoomFacilitieSerializer(serializers.ModelSerializer):
@@ -76,20 +86,4 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'modified_date',
 
-        )
-
-
-class RoomReservationSerializer(serializers.ModelSerializer):
-    guest = settings.AUTH_USER_MODEL
-    checkin = serializers.DateField()
-    checkout = serializers.DateField()
-
-    class Meta:
-        model = RoomReservation
-        fields = (
-            'room',
-            'guest',
-            'checkin',
-            'checkout',
-            'created_at',
         )
