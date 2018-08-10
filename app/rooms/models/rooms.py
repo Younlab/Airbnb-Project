@@ -7,7 +7,7 @@ from imagekit.processors import Thumbnail
 __all__ = (
     'Rooms',
     'RoomRules',
-    'RoomImageList',
+    'RoomImage',
     'RoomFacilities',
 )
 
@@ -53,22 +53,22 @@ class Rooms(models.Model):
         related_name='with_host_rooms',
     )
 
-    # 커버 이미지
-    image_cover = models.ImageField(
-        verbose_name='커버 이미지',
-        help_text='게스트에게 소개할 숙소의 커버 이미지를 업로드 해 주세요',
-        upload_to='room_image_cover',
-        blank=True,
-    )
-
-    # image thumbail
-    image_cover_thumbnail = ProcessedImageField(
-        upload_to='image_cover_thumbnail',
-        processors=[Thumbnail(308, 206)],
-        format='png',
-        options={'quality': 100},
-        blank=True,
-    )
+    # # 커버 이미지
+    # image_cover = models.ImageField(
+    #     verbose_name='커버 이미지',
+    #     help_text='게스트에게 소개할 숙소의 커버 이미지를 업로드 해 주세요',
+    #     upload_to='room_image_cover',
+    #     blank=True,
+    # )
+    #
+    # # image thumbail
+    # image_cover_thumbnail = ProcessedImageField(
+    #     upload_to='image_cover_thumbnail',
+    #     processors=[Thumbnail(308, 206)],
+    #     format='png',
+    #     options={'quality': 100},
+    #     blank=True,
+    # )
 
     # 일일 요금
     days_price = models.PositiveIntegerField(
@@ -211,22 +211,21 @@ class RoomRules(models.Model):
         return self.rule_list
 
 
-class RoomImageList(models.Model):
+class RoomImage(models.Model):
     """
     이미지 리스트
     """
     room = models.ForeignKey(
         Rooms,
+        related_name='room_images',
         on_delete=models.CASCADE,
-        related_name='room_image_lists',
-        blank=True,
     )
-    room_image_list = models.ImageField(
-        upload_to='room_image_list'
+    room_image = models.ImageField(
+        upload_to='room_cover_image'
     )
 
     def __str__(self):
-        return self.room_image_list
+        return self.room_image
 
 
 class RoomFacilities(models.Model):
