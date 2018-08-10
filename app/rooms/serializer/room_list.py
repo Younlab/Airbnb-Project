@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from members.serializers.user import UserSerializer
@@ -79,7 +80,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
-    guest = UserSerializer()
+    guest = settings.AUTH_USER_MODEL
     checkin = serializers.DateField()
     checkout = serializers.DateField()
 
