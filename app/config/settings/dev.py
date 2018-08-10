@@ -9,7 +9,6 @@ WSGI_APPLICATION = 'config.wsgi.dev.application'
 
 # django-storages
 INSTALLED_APPS += [
-
     'django_extensions',
 ]
 
