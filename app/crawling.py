@@ -139,6 +139,15 @@ def crawler():
                 # 최소 예약 가능일
                 minimum_check_in_duration = listing_dict['min_nights']
 
+                # 환불규정
+                refund = '''
+                        일반 정책 \n
+                        More information \n
+                        체크인 5일 전까지 예약을 취소하면 에어비앤비 서비스 수수료을 제외한 요금이 환불됩니다.\n
+                        체크인까지 5일이 남지 않은 시점에 예약을 취소하면 첫 1박 요금과 나머지 숙박 요금의 50%는 환불되지 않습니다. \n
+                        에어비앤비 서비스 수수료는 예약 후 48시간 이내에 취소하고 체크인 전인 경우에만 환불됩니다. \n
+                        '''
+
                 # 주소
                 try:
                     country = address_list[length - 1]
@@ -214,6 +223,7 @@ def crawler():
                     'rooms_personnel': rooms_personnel,
                     'rooms_bathroom': rooms_bathroom,
                     'check_in_minimum': minimum_check_in_duration,
+                    'refund': refund,
                     'address_country': country,
                     'address_city': citys,
                     'address_district': district,
@@ -230,7 +240,7 @@ def crawler():
                 rooms.image_cover.save('rooms_cover_image.png',
                                        ContentFile(requests.get(rooms_data['image_cover']).content))
                 rooms.image_cover_thumbnail.save('image_cover_thumbnail.png',
-                                       ContentFile(requests.get(rooms_data['image_cover']).content))
+                                                 ContentFile(requests.get(rooms_data['image_cover']).content))
                 rooms.save()
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
