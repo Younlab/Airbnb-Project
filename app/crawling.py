@@ -185,7 +185,6 @@ def crawler():
 
                 print('rooms name :', rooms_name)
                 print('rooms price :', rooms_price)
-                # print('detail cover image :', room_detail_image_cover)
                 print('room cover image', rooms_image_list)
                 print('room host id :', rooms_host_id)
                 print('room host first name :', rooms_host_first_name)
@@ -259,6 +258,7 @@ def crawler():
                     rooms_images = RoomImage.objects.create(room=rooms)
                     rooms_images.room_image.save(f'rooms_cover.png',
                                                  ContentFile(requests.get(image_add).content))
+                    rooms_images.room_image_thumbnail.save()
                     rooms.save()
 
                 for facilities_add in rooms_facilities:
