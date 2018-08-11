@@ -1,16 +1,19 @@
 from django.conf import settings
 from rest_framework import serializers
-
+from imagekit.models import ImageSpecField
 from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
+    room_image_thumbnail = serializers.ImageField()
+
     class Meta:
         model = RoomImage
         fields = (
             'room_image',
+            'room_image_thumbnail',
         )
 
 class RoomListSerializer(serializers.ModelSerializer):

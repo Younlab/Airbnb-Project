@@ -258,7 +258,7 @@ def crawler():
                     rooms_images = RoomImage.objects.create(room=rooms)
                     rooms_images.room_image.save(f'rooms_cover.png',
                                                  ContentFile(requests.get(image_add).content))
-                    rooms_images.room_image_thumbnail.save()
+                    # rooms_images.room_image_thumbnail.save()
                     rooms.save()
 
                 for facilities_add in rooms_facilities:

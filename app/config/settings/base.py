@@ -48,8 +48,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Application definition
-
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
     'rooms.apps.RoomsConfig',
