@@ -247,24 +247,15 @@ def crawler():
                     rooms_name=rooms_data['rooms_name'],
                     defaults=rooms_data,
                 )
-                print(rooms)
-                # rooms.image_cover.save('rooms_cover_image.png',
-                #                        ContentFile(requests.get(rooms_data['image_cover']).content))
-                # rooms.image_cover_thumbnail.save('image_cover_thumbnail.png',
-                #                                  ContentFile(requests.get(rooms_data['image_cover']).content))
-                # rooms.save()
 
                 for image_add in rooms_image_list:
                     rooms_images = RoomImage.objects.create(room=rooms)
                     rooms_images.room_image.save(f'rooms_cover.png',
                                                  ContentFile(requests.get(image_add).content))
-                    # rooms_images.room_image_thumbnail.save()
-                    rooms.save()
 
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
 
-                rooms.save()
 
                 for rules_add in rooms_rules:
                     rooms.room_rules.update_or_create(rule_list=rules_add)

@@ -1,6 +1,5 @@
 from django.conf import settings
 from rest_framework import serializers
-from imagekit.models import ImageSpecField
 from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
@@ -15,6 +14,7 @@ class RoomImageSerializer(serializers.ModelSerializer):
             'room_image',
             'room_image_thumbnail',
         )
+
 
 class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,6 +66,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     room_reservations = RoomReservationSerializer(many=True)
     room_rules = RoomRuleSerializer(many=True)
     room_images = RoomImageSerializer(many=True)
+
     class Meta:
         model = Rooms
         fields = (
