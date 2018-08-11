@@ -6,6 +6,7 @@ from ..models import Rooms
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
+    room_image = serializers.ImageField()
     room_image_thumbnail = serializers.ImageField()
 
     class Meta:
@@ -66,6 +67,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     room_reservations = RoomReservationSerializer(many=True)
     room_rules = RoomRuleSerializer(many=True)
     room_images = RoomImageSerializer(many=True)
+    rooms_cover_image = serializers.ImageField()
 
     class Meta:
         model = Rooms
@@ -73,6 +75,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'rooms_name',
             'rooms_tag',
             'rooms_host',
+            'rooms_cover_image',
             'rooms_type',
             'room_images',
             'rooms_amount',
