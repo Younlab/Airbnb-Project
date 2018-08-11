@@ -77,8 +77,8 @@ def crawler():
                     rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
-                # room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
-                # room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
+                room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
+                room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
 
                 # host 정보
                 rooms_host_id = listing_dict['user']['id']
@@ -185,7 +185,6 @@ def crawler():
 
                 print('rooms name :', rooms_name)
                 print('rooms price :', rooms_price)
-                # print('detail cover image :', room_detail_image_cover)
                 print('room cover image', rooms_image_list)
                 print('room host id :', rooms_host_id)
                 print('room host first name :', rooms_host_first_name)
@@ -226,7 +225,6 @@ def crawler():
                     'rooms_name': rooms_name,
                     'rooms_tag': location_tag,
                     'rooms_host': user,
-                    # 'image_cover': room_detail_image_cover,
                     'days_price': rooms_price,
                     'rooms_description': rooms_discription,
                     'rooms_amount': rooms_amount,
@@ -248,23 +246,17 @@ def crawler():
                     rooms_name=rooms_data['rooms_name'],
                     defaults=rooms_data,
                 )
-                print(rooms)
-                # rooms.image_cover.save('rooms_cover_image.png',
-                #                        ContentFile(requests.get(rooms_data['image_cover']).content))
-                # rooms.image_cover_thumbnail.save('image_cover_thumbnail.png',
-                #                                  ContentFile(requests.get(rooms_data['image_cover']).content))
-                # rooms.save()
+
+                rooms.rooms_cover_image.save('rooms_cover_image.png',
+                                             ContentFile(requests.get(room_detail_image_cover).content))
 
                 for image_add in rooms_image_list:
                     rooms_images = RoomImage.objects.create(room=rooms)
-                    rooms_images.room_image.save(f'rooms_cover.png',
+                    rooms_images.room_image.save('rooms_profile_image.png',
                                                  ContentFile(requests.get(image_add).content))
-                    rooms.save()
 
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
-
-                rooms.save()
 
                 for rules_add in rooms_rules:
                     rooms.room_rules.update_or_create(rule_list=rules_add)

@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
 
-from imagekit.models import ProcessedImageField
+from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import Thumbnail
+from pilkit.processors import ResizeToFill
 
 __all__ = (
     'Rooms',
@@ -51,6 +52,12 @@ class Rooms(models.Model):
         help_text='숙소의 오너입니다.',
         on_delete=models.CASCADE,
         related_name='with_host_rooms',
+    )
+
+    # 숙소 커버 이미지
+    rooms_cover_image = models.ImageField(
+        upload_to='cover_image',
+        verbose_name='숙소의 커버 이미지입니다.',
     )
 
     # 일일 요금
@@ -204,7 +211,15 @@ class RoomImage(models.Model):
         on_delete=models.CASCADE,
     )
     room_image = models.ImageField(
-        upload_to='room_cover_image'
+        upload_to='room_profile_image',
+        verbose_name='숙소 프로필 이미지를 업로드 해주세요',
+    )
+
+    room_image_thumbnail = ImageSpecField(
+        source='room_image',
+        processors=[ResizeToFill(308, 206)],
+        format='png',
+        options={'quality': 100},
     )
 
     def __str__(self):

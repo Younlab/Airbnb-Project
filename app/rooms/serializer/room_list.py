@@ -1,19 +1,33 @@
 from django.conf import settings
 from rest_framework import serializers
-
 from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
 
 
+class RoomImageThumbnailSerializer(serializers.ModelSerializer):
+    room_image_thumbnail = serializers.ImageField()
+
+    class Meta:
+        model = RoomImage
+        fields = (
+            'room_image_thumbnail',
+        )
+
+
 class RoomImageSerializer(serializers.ModelSerializer):
+    room_image = serializers.ImageField()
+
     class Meta:
         model = RoomImage
         fields = (
             'room_image',
         )
 
+
 class RoomListSerializer(serializers.ModelSerializer):
+    room_images = RoomImageThumbnailSerializer(many=True)
+
     class Meta:
         model = Rooms
         fields = (
@@ -21,6 +35,7 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_name',
             'rooms_tag',
             'days_price',
+            'room_images',
 
         )
 
@@ -63,12 +78,15 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     room_reservations = RoomReservationSerializer(many=True)
     room_rules = RoomRuleSerializer(many=True)
     room_images = RoomImageSerializer(many=True)
+    rooms_cover_image = serializers.ImageField()
+
     class Meta:
         model = Rooms
         fields = (
             'rooms_name',
             'rooms_tag',
             'rooms_host',
+            'rooms_cover_image',
             'rooms_type',
             'room_images',
             'rooms_amount',
