@@ -77,8 +77,8 @@ def crawler():
                     rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
-                # room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
-                # room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
+                room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
+                room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
 
                 # host 정보
                 rooms_host_id = listing_dict['user']['id']
@@ -225,7 +225,6 @@ def crawler():
                     'rooms_name': rooms_name,
                     'rooms_tag': location_tag,
                     'rooms_host': user,
-                    # 'image_cover': room_detail_image_cover,
                     'days_price': rooms_price,
                     'rooms_description': rooms_discription,
                     'rooms_amount': rooms_amount,
@@ -248,14 +247,16 @@ def crawler():
                     defaults=rooms_data,
                 )
 
+                rooms.rooms_cover_image.save('rooms_cover_image.png',
+                                             ContentFile(requests.get(room_detail_image_cover).content))
+
                 for image_add in rooms_image_list:
                     rooms_images = RoomImage.objects.create(room=rooms)
-                    rooms_images.room_image.save(f'rooms_cover.png',
+                    rooms_images.room_image.save(f'rooms_profile_image.png',
                                                  ContentFile(requests.get(image_add).content))
 
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
-
 
                 for rules_add in rooms_rules:
                     rooms.room_rules.update_or_create(rule_list=rules_add)
