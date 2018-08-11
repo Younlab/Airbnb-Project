@@ -13,18 +13,6 @@ user = {
 }
 
 
-def get_dummy_user():
-    user = User.objects.create_user(
-        username='dummy_username@test.com',
-        first_name='user',
-        last_name='test',
-        birthday='000000',
-        password='test1234',
-    )
-    user.activate = True
-    return user
-
-
 class UserListTest(APITestCase):
     """
     User List 요청에 관한 테스트
@@ -47,3 +35,20 @@ class UserListTest(APITestCase):
         response = self.client.get(self.URL)
         print(response.status_code)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class UserSignUpTest(APITestCase):
+    """
+    User SignUp 에 관한 테스트
+    """
+    URL = '/members/signup/'
+
+    def test_user_sign_up_succeed_status_code(self):
+        """
+        user 회원가입 정보가 정상적으로 요청되었을 때 요청 결과의 HTTP 상태코드가 201인지 확인
+        json으로 요청하고 201 상태코드를 받아옴
+        :return:
+        """
+
+        response = self.client.post(self.URL, data=user, format='json',)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
