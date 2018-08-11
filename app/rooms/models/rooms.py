@@ -211,7 +211,8 @@ class RoomImage(models.Model):
         on_delete=models.CASCADE,
     )
     room_image = models.ImageField(
-        upload_to='room_cover_image'
+        upload_to='room_profile_image',
+        verbose_name='숙소 프로필 이미지를 업로드 해주세요',
     )
 
     room_image_thumbnail = ImageSpecField(
