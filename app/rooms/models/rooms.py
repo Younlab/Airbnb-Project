@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
 
-from imagekit.models import ProcessedImageField
+from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import Thumbnail
+from pilkit.processors import ResizeToFill
 
 __all__ = (
     'Rooms',
@@ -205,6 +206,13 @@ class RoomImage(models.Model):
     )
     room_image = models.ImageField(
         upload_to='room_cover_image'
+    )
+
+    room_image_thumbnail = ImageSpecField(
+        source='room_image',
+        processors=[ResizeToFill(308, 206)],
+        format='png',
+        options={'quality': 100},
     )
 
     def __str__(self):
