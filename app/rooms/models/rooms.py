@@ -54,6 +54,12 @@ class Rooms(models.Model):
         related_name='with_host_rooms',
     )
 
+    # 숙소 커버 이미지
+    rooms_cover_image = models.ImageField(
+        upload_to='cover_image',
+        verbose_name='숙소의 커버 이미지입니다.',
+    )
+
     # 일일 요금
     days_price = models.PositiveIntegerField(
         verbose_name='일일 숙박 요금',
