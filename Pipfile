@@ -16,6 +16,7 @@ django-extensions = "*"
 ipython = "*"
 djangorestframework = "*"
 django-filter = "*"
+requests = "*"
 
 [dev-packages]
 awsebcli = "*"

@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from .views import login, logout, signup, user_list, modify, email_check
+from .views import login, logout, signup, user_list, modify, email_check, likes_rooms
 
 app_name = 'user'
 
@@ -13,5 +13,6 @@ urlpatterns = [
     path('signup/', signup.UserSignup.as_view(), name='signup'),
     path('userlist/', user_list.UserList.as_view(), name='user-list'),
     path('profile/', modify.UserProfileModefied.as_view(), name='user-profile'),
+    path('likes/', likes_rooms.UserLikesRooms.as_view(), name='likes-rooms'),
     path('activate/<str:uidb64>/<str:token>/', signup.UserSignupCheck.as_view(), name='signup_check'),
 ]
