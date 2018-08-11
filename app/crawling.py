@@ -252,7 +252,7 @@ def crawler():
 
                 for image_add in rooms_image_list:
                     rooms_images = RoomImage.objects.create(room=rooms)
-                    rooms_images.room_image.save(f'rooms_profile_image.png',
+                    rooms_images.room_image.save('rooms_profile_image.png',
                                                  ContentFile(requests.get(image_add).content))
 
                 for facilities_add in rooms_facilities:
