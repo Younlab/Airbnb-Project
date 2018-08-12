@@ -37,9 +37,18 @@
   "AWS_S3_REGION_NAME": "<AWS_S3_REGION_NAME>",
   "AWS_S3_SIGNATURE_VERSION": "<AWS_S3_SIGNATURE_VERSION>",
 
-  "SUPERUSER_USERNAME": "username",
-  "SUPERUSER_PASSWORD": "password",
-  "SUPERUSER_EMAIL": "<email>"
+  "ADMIN_USERNAME": "<username>",
+  "ADMIN_PASSWORD": "<password>",
+
+  "SUPERUSER_USERNAME": "<username>",
+  "SUPERUSER_PASSWORD": "<password>",
+  "SUPERUSER_EMAIL": "<email>",
+
+  "EMAIL_BACKEND" : "<email_backend>",
+  "EMAIL_PORT" : "<port>",
+  "EMAIL_HOST" : "<email_host>",
+  "EMAIL_HOST_USER" : "<email_host_user>",
+  "EMAIL_HOST_PASSWORD" : "<email_host_password>"
 }
 ```
 
