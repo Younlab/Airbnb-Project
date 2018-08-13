@@ -259,6 +259,10 @@ class RoomReservation(models.Model):
         null=True,
     )
 
+    guest_personnel = models.PositiveSmallIntegerField(
+        verbose_name='숙박 인원'
+    )
+
     checkin = models.DateField(
         blank=True,
         verbose_name='체크인 날짜',
