@@ -35,19 +35,11 @@ class RoomReservation(generics.ListCreateAPIView):
     filter_fields = ('room',)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        if request.user.is_authenticated:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        raise serializers.ValidationError('인증되지 않은 사용자입니다.', status.HTTP_400_BAD_REQUEST)
 
-    # def create(self, request):
-    #     data = request.data
-    #     serializer = RoomReservationSerializer(data=data, many=True)
-    #     if request.user.is_authenticated:
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data)
-    #         else:
-    #             raise serializers.ValidationError('올바르지 않은 형식입니다.', status.HTTP_400_BAD_REQUEST)
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
