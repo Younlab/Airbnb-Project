@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, status
+from rest_framework import generics, permissions
 import django_filters
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
 
 from ..models.rooms import RoomReservation
 from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer
@@ -29,14 +28,15 @@ class RoomsDetail(generics.RetrieveAPIView):
 
 class RoomReservation(generics.ListCreateAPIView):
     queryset = RoomReservation.objects.all()
-    serializer_class = RoomReservationSerializer
+
+    # 필터링, 해당 room 에대한 예약 출력, ex -> "?room=1"
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
     filter_fields = ('room',)
 
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer = RoomReservationSerializer(queryset, many=True)
-        if request.user.is_authenticated:
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    # login 인증을 통과하지 못하면 "인증오류" 발생
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = RoomReservationSerializer
+
+    # login 한 유저만 예약 할 수 있도록 처리
+    def perform_create(self, serializer):
+        serializer.save(guest=self.request.user)

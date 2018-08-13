@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import Thumbnail
+from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill
 
 __all__ = (
@@ -247,9 +246,10 @@ class RoomReservation(models.Model):
     """
     예약 등록
     """
-    room = models.ManyToManyField(
+    room = models.ForeignKey(
         Rooms,
-        related_name='room_reservations'
+        related_name='room_reservations',
+        on_delete=models.CASCADE,
     )
 
     guest = models.ForeignKey(
@@ -259,16 +259,18 @@ class RoomReservation(models.Model):
         null=True,
     )
 
+    guest_personnel = models.PositiveSmallIntegerField(
+        verbose_name='숙박 인원'
+    )
+
     checkin = models.DateField(
         blank=True,
         verbose_name='체크인 날짜',
-        unique=True,
     )
 
     checkout = models.DateField(
         blank=True,
         verbose_name='체크아웃 날짜',
-        unique=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
