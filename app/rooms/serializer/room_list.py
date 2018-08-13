@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.conf import settings
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
@@ -48,8 +50,6 @@ class RoomReservationSerializer(serializers.ModelSerializer):
     checkin = serializers.DateField()
     checkout = serializers.DateField()
 
-
-
     class Meta:
         model = RoomReservation
         fields = (
@@ -71,7 +71,23 @@ class RoomReservationSerializer(serializers.ModelSerializer):
 
         if value.get('guest_personnel') and room.rooms_personnel < value['guest_personnel']:
             raise serializers.ValidationError('숙박 허용인원을 초과했습니다.')
-        print(value)
+
+        reservation_list = []
+        reservation_instance = room.room_reservations.all()
+
+        for date in reservation_instance:
+            start_date = date.checkout - date.checkin
+            reservation_list += [date.checkin + timedelta(n) for n in range(start_date.days + 1)]
+
+        check_in = value.get('checkin')
+        check_out = value.get('checkout')
+
+        for day in reservation_list:
+            if day < check_in or day > check_out:
+                pass
+            else:
+                raise serializers.ValidationError('예약할 수 없는 일자입니다.')
+
         return value
 
     def create(self, validated_data):
