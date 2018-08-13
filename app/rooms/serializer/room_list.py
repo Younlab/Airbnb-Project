@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.conf import settings
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.generics import get_object_or_404
 
 from members.serializers.user import UserSerializer
@@ -81,6 +81,16 @@ class RoomReservationSerializer(serializers.ModelSerializer):
 
         check_in = value.get('checkin')
         check_out = value.get('checkout')
+
+        if not check_in:
+            raise serializers.ValidationError(detail='check-in 정보가 입력되지 않았습니다.',
+                                              status_code=status.HTTP_400_BAD_REQUEST)
+        elif not check_out:
+            raise serializers.ValidationError(detail='check-out 정보가 입력되지 않았습니다.',
+                                              status_code=status.HTTP_400_BAD_REQUEST)
+
+        if check_in > check_out or check_in == check_out:
+            raise serializers.ValidationError(detail='잘못된 예약입니다.', status_code=status.HTTP_400_BAD_REQUEST)
 
         for day in reservation_list:
             if day < check_in or day > check_out:
