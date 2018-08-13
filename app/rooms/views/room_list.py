@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, status, serializers
+from rest_framework import generics, status, serializers, permissions
 import django_filters
+from rest_framework.generics import get_object_or_404
+from rest_framework.mixins import CreateModelMixin
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,16 +32,9 @@ class RoomsDetail(generics.RetrieveAPIView):
 
 class RoomReservation(generics.ListCreateAPIView):
     queryset = RoomReservation.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = RoomReservationSerializer
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    filter_fields = ('room',)
 
-    def create(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        raise serializers.ValidationError('인증되지 않은 사용자입니다.', status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(guest=self.request.user)
 
