@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.urls import path
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
 from members.tokens import account_activation_token
@@ -52,16 +52,29 @@ class UserSignUpTest(APITestCase):
         json으로 요청하고 201 상태코드를 받아옴
         :return:
         """
-
         response = self.client.post(self.URL, data=dummy_user, format='json', )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_sign_up_wrong_password_occurred_validation_error(self):
+        """
+        user 회원가입 중 Password가 8자리가 안될 경우, ValidationError 발생
+        :return:
+        """
+        user = {
+            'username': 'dummy_username@test.com',
+            'first_name': 'user',
+            'last_name': 'test',
+            'birthday': '000000',
+            'password': 'test123'
+        }
+        self.client.post(self.URL, data=user, format='json',)
+        self.assertRaises(ValidationError)
 
 
 class UserEmailActivateCheckTest(APITestCase):
     """
     User SignUp 시에 Email 인증 관련 테스트
     """
-    URL = '/members/activate/<str:uidb64>/<str:token>/'
 
     def test_check_user_email_token_equal(self):
         """
@@ -76,4 +89,3 @@ class UserEmailActivateCheckTest(APITestCase):
         # user email token 값과 DB상의 토큰 값 비교
         token = account_activation_token.make_token(user)
         self.assertTrue(account_activation_token.check_token(user, token))
-
