@@ -69,9 +69,11 @@ class RoomReservationSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError('rooms 정보가 전달되지 않았습니다.')
 
+        # room model 의 숙박 한도 인원 검사
         if value.get('guest_personnel') and room.rooms_personnel < value['guest_personnel']:
             raise serializers.ValidationError('숙박 허용인원을 초과했습니다.')
 
+        # 기존 예약 목록 수집
         reservation_list = []
         reservation_instance = room.room_reservations.all()
 
@@ -82,6 +84,7 @@ class RoomReservationSerializer(serializers.ModelSerializer):
         check_in = value.get('checkin')
         check_out = value.get('checkout')
 
+        # 체크 인, 체크 아웃 필드 채워졌는지 검사
         if not check_in:
             raise serializers.ValidationError(detail='check-in 정보가 입력되지 않았습니다.',
                                               status_code=status.HTTP_400_BAD_REQUEST)
@@ -89,9 +92,11 @@ class RoomReservationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail='check-out 정보가 입력되지 않았습니다.',
                                               status_code=status.HTTP_400_BAD_REQUEST)
 
+        # 잘못된 예약 예외처리, 체크 인 이 체크 아웃보다 뒷 일자 일 수 없고, 체크 인 과 체크 아웃 이 같은 일자 일 수가 없다.
         if check_in > check_out or check_in == check_out:
             raise serializers.ValidationError(detail='잘못된 예약입니다.', status_code=status.HTTP_400_BAD_REQUEST)
 
+        # 체크 인, 체크 아웃 필드 중복 검사, 이전 다른 사람이 먼저 예약 하였다면 예약 실패 처리
         for day in reservation_list:
             if day < check_in or day > check_out:
                 pass
