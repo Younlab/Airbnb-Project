@@ -1,5 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
+
 from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
@@ -46,15 +48,35 @@ class RoomReservationSerializer(serializers.ModelSerializer):
     checkin = serializers.DateField()
     checkout = serializers.DateField()
 
+
+
     class Meta:
         model = RoomReservation
         fields = (
             'room',
             'guest',
+            'guest_personnel',
             'checkin',
             'checkout',
             'created_at',
         )
+
+    def validate(self, value):
+        if self.initial_data.get('room'):
+            room_pk = self.initial_data.get('room')
+            room = get_object_or_404(Rooms, pk=room_pk)
+            value['room'] = room
+        else:
+            raise serializers.ValidationError('rooms 정보가 전달되지 않았습니다.')
+
+        if value.get('guest_personnel') and room.rooms_personnel < value['guest_personnel']:
+            raise serializers.ValidationError('숙박 허용인원을 초과했습니다.')
+        print(value)
+        return value
+
+    def create(self, validated_data):
+        reservation = super().create(validated_data)
+        return reservation
 
 
 class RoomFacilitieSerializer(serializers.ModelSerializer):
