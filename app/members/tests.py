@@ -124,3 +124,15 @@ class UserLoginTest(APITestCase):
         """
         self.client.post(self.URL, data=LOGIN_USER, format='json', )
         self.assertRaises(ValidationError)
+
+    def test_user_login_succeed_status_code_200(self):
+        """
+        user가 로그인에 성공했을 때, HTTP 상태코드 200 인지 확인
+        :return:
+        """
+        user = get_dummy_user()
+        # 로그인을 그냥 바로 시켜버림!
+        self.client.force_authenticate(user)
+
+        response = self.client.post(self.URL, data=LOGIN_USER, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
