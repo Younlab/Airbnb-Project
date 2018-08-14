@@ -41,7 +41,7 @@ class RoomListSerializer(serializers.ModelSerializer):
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
-    guest = settings.AUTH_USER_MODEL
+
     checkin = serializers.DateField()
     checkout = serializers.DateField()
 
