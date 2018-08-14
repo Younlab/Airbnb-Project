@@ -8,7 +8,7 @@ from ..serializers.user import UserProfileSerializer
 User = get_user_model()
 
 
-class UserProfileModefied(APIView):
+class UserProfileModified(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             user = User.objects.get(pk=request.user.pk)
