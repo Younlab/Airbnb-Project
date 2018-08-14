@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
@@ -98,6 +100,18 @@ class UserEmailActivateCheckTest(APITestCase):
         token = account_activation_token.make_token(user)
         self.assertTrue(account_activation_token.check_token(user, token))
 
+    def test_check_user_email_url_status_code_200(self):
+        user = get_dummy_user()
+        email_auth = {
+            'user': user,
+            'domain': 'leesoo.kr',
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+            'token': account_activation_token.make_token(user)
+        }
+        URL = f"/members/activate/{email_auth['uid']}/{email_auth['token']}/"
+        response = self.client.get(URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
 
 class UserLoginTest(APITestCase):
     """
