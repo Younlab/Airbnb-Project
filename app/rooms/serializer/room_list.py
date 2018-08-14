@@ -45,21 +45,9 @@ class RoomListSerializer(serializers.ModelSerializer):
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
-    room = Rooms.objects.all()
-    guest = settings.AUTH_USER_MODEL
-    checkin = serializers.DateField()
-    checkout = serializers.DateField()
-
     class Meta:
         model = RoomReservation
-        fields = (
-            'room',
-            'guest',
-            'guest_personnel',
-            'checkin',
-            'checkout',
-            'created_at',
-        )
+        fields = '__all__'
 
     def validate(self, value):
         if self.initial_data.get('room'):
