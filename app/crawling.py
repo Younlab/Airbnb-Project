@@ -54,6 +54,7 @@ def crawler():
                 bootstrap_json = json.loads(bootstrap_data.group(1))
                 listing_dict = bootstrap_json['bootstrapData']['reduxData']['homePDP']['listingInfo']['listing']
 
+                # driver.implicitly_wait(3)
                 # image cover list
                 rooms_image_list = []
                 rooms_image_count = 0
@@ -89,7 +90,7 @@ def crawler():
                     # 지역 테그
                     location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
                 except:
-                    location_tag = ''
+                    location_tag = 'null'
                 try:
                     # 숙박 인원
                     rooms_personnel_source = soup.select_one(
@@ -150,13 +151,7 @@ def crawler():
                 minimum_check_in_duration = listing_dict['min_nights']
 
                 # 환불규정
-                refund = '''
-                        일반 정책 \n
-                        More information \n
-                        체크인 5일 전까지 예약을 취소하면 에어비앤비 서비스 수수료을 제외한 요금이 환불됩니다.\n
-                        체크인까지 5일이 남지 않은 시점에 예약을 취소하면 첫 1박 요금과 나머지 숙박 요금의 50%는 환불되지 않습니다. \n
-                        에어비앤비 서비스 수수료는 예약 후 48시간 이내에 취소하고 체크인 전인 경우에만 환불됩니다. \n
-                        '''
+                refund = '일반 정책 More information 체크인 5일 전까지 예약을 취소하면 에어비앤비 서비스 수수료을 제외한 요금이 환불됩니다.체크인까지 5일이 남지 않은 시점에 예약을 취소하면 첫 1박 요금과 나머지 숙박 요금의 50%는 환불되지 않습니다. 에어비앤비 서비스 수수료는 예약 후 48시간 이내에 취소하고 체크인 전인 경우에만 환불됩니다.'
 
                 # 주소
                 try:
@@ -223,6 +218,7 @@ def crawler():
 
                 rooms_data = {
                     'rooms_name': rooms_name,
+                    'rooms_type': 'OR',
                     'rooms_tag': location_tag,
                     'rooms_host': user,
                     'days_price': rooms_price,

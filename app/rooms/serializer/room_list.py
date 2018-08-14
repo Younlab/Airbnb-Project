@@ -45,24 +45,13 @@ class RoomListSerializer(serializers.ModelSerializer):
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
-    room = Rooms.objects.all()
-    guest = settings.AUTH_USER_MODEL
-    checkin = serializers.DateField()
-    checkout = serializers.DateField()
-
     class Meta:
         model = RoomReservation
-        fields = (
-            'room',
-            'guest',
-            'guest_personnel',
-            'checkin',
-            'checkout',
-            'created_at',
-        )
+        fields = '__all__'
 
     def validate(self, value):
         if self.initial_data.get('room'):
+            # room_pk = self.room.get('pk')
             room_pk = self.initial_data.get('room')
             room = get_object_or_404(Rooms, pk=room_pk)
             value['room'] = room
@@ -71,7 +60,7 @@ class RoomReservationSerializer(serializers.ModelSerializer):
 
         # room model 의 숙박 한도 인원 검사
         if value.get('guest_personnel') and room.rooms_personnel < value['guest_personnel']:
-            raise serializers.ValidationError('숙박 허용인원을 초과했습니다.')
+            raise serializers.ValidationError('숙박 허용 인원을 초과했습니다.')
 
         # 기존 예약 목록 수집
         reservation_list = []
@@ -137,6 +126,8 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = (
+            'pk',
+            'rooms_type',
             'rooms_name',
             'rooms_tag',
             'rooms_host',
@@ -163,5 +154,4 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'address_longitude',
             'created_at',
             'modified_date',
-
         )
