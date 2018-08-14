@@ -89,3 +89,27 @@ class UserEmailActivateCheckTest(APITestCase):
         # user email token 값과 DB상의 토큰 값 비교
         token = account_activation_token.make_token(user)
         self.assertTrue(account_activation_token.check_token(user, token))
+
+
+class UserLoginTest(APITestCase):
+    """
+    User Login 시에 관련된 테스트
+    """
+    URL = '/members/login/'
+
+    def test_check_user_email_authentication_validation_error(self):
+        """
+        user 회원가입 후 인증 확인이 되지않은 이메일일 때, validationError를 발생
+        :return:
+        """
+        user = User.objects.create_django_user(**dummy_user)
+        print(user.activate)
+        user.save()
+
+        login_user = {
+            'username': 'dummy_username@test.com',
+            'password': 'test1234'
+        }
+
+        self.client.post(self.URL, data=login_user, format='json',)
+        self.assertRaises(ValidationError)
