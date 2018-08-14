@@ -21,14 +21,15 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 class RoomListSerializer(serializers.ModelSerializer):
     rooms_cover_thumbnail = serializers.ImageField()
+
     class Meta:
         model = Rooms
         fields = (
             'rooms_host',
+            'rooms_type',
             'rooms_name',
             'rooms_tag',
             'days_price',
-            'room_images',
             'rooms_cover_thumbnail',
         )
 
@@ -59,24 +60,24 @@ class RoomReservationSerializer(serializers.ModelSerializer):
             start_date = date.checkout - date.checkin
             reservation_list += [date.checkin + timedelta(n) for n in range(start_date.days + 1)]
 
-        check_in = value.get('checkin')
-        check_out = value.get('checkout')
+        checkin = value.get('checkin')
+        checkout = value.get('checkout')
 
         # 체크 인, 체크 아웃 필드 채워졌는지 검사
-        if not check_in:
+        if not checkin:
             raise serializers.ValidationError(detail='check-in 정보가 입력되지 않았습니다.',
-                                              status_code=status.HTTP_400_BAD_REQUEST)
-        elif not check_out:
+                                              status=status.HTTP_400_BAD_REQUEST)
+        elif not checkout:
             raise serializers.ValidationError(detail='check-out 정보가 입력되지 않았습니다.',
-                                              status_code=status.HTTP_400_BAD_REQUEST)
+                                              status=status.HTTP_400_BAD_REQUEST)
 
         # 잘못된 예약 예외처리, 체크 인 이 체크 아웃보다 뒷 일자 일 수 없고, 체크 인 과 체크 아웃 이 같은 일자 일 수가 없다.
-        if check_in > check_out or check_in == check_out:
-            raise serializers.ValidationError(detail='잘못된 예약입니다.', status_code=status.HTTP_400_BAD_REQUEST)
+        if checkin > checkout or checkin == checkout:
+            raise serializers.ValidationError(detail='잘못된 예약입니다.', status=status.HTTP_400_BAD_REQUEST)
 
         # 체크 인, 체크 아웃 필드 중복 검사, 이전 다른 사람이 먼저 예약 하였다면 예약 실패 처리
         for day in reservation_list:
-            if day < check_in or day > check_out:
+            if day < checkin or day > checkout:
                 pass
             else:
                 raise serializers.ValidationError('예약할 수 없는 일자입니다.')
@@ -84,8 +85,10 @@ class RoomReservationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        reservation = super().create(validated_data)
-        return reservation
+        # reservation = super().create(validated_data)
+        # return reservation
+        return RoomReservation.objects.create(**validated_data)
+
 
 
 class RoomFacilitieSerializer(serializers.ModelSerializer):
