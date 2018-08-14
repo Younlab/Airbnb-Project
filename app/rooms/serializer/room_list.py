@@ -127,6 +127,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
         model = Rooms
         fields = (
             'pk',
+            'rooms_type',
             'rooms_name',
             'rooms_tag',
             'rooms_host',
@@ -153,5 +154,4 @@ class RoomDetailSerializer(serializers.ModelSerializer):
             'address_longitude',
             'created_at',
             'modified_date',
-
         )

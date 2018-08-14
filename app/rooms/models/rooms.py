@@ -33,14 +33,14 @@ class Rooms(models.Model):
     rooms_name = models.CharField(
         verbose_name='숙소 이름',
         help_text='숙소의 이름을 입력하세요',
-        max_length=70,
+        max_length=150,
     )
 
     # 태그
     rooms_tag = models.CharField(
         verbose_name='태그',
         help_text='검색에 사용될 지역 태그를 입력하세요',
-        max_length=20,
+        max_length=100,
         blank=True,
     )
 
@@ -69,7 +69,6 @@ class Rooms(models.Model):
     rooms_description = models.TextField(
         verbose_name='숙소 개요',
         help_text='당신의 숙소를 소개하세요, 게스트의 흥미를 유발하는것이 중요합니다.',
-        max_length=200
     )
 
     # 객실 수
@@ -136,14 +135,14 @@ class Rooms(models.Model):
     # 나라
     address_country = models.CharField(
         verbose_name='국가',
-        max_length=30,
+        max_length=50,
         blank=True
     )
 
     # 도시
     address_city = models.CharField(
         verbose_name='도시',
-        max_length=50,
+        max_length=100,
         blank=True
     )
 
@@ -166,6 +165,7 @@ class Rooms(models.Model):
         verbose_name='Google MAP API 위도',
         decimal_places=14,
         max_digits=16,
+        blank=True,
     )
 
     # 경도
@@ -173,6 +173,7 @@ class Rooms(models.Model):
         verbose_name='Google MAP API 경도',
         decimal_places=14,
         max_digits=17,
+        blank=True,
     )
 
     # 생성 일자 자동 저장
@@ -212,6 +213,7 @@ class RoomImage(models.Model):
     room_image = models.ImageField(
         upload_to='room_profile_image',
         verbose_name='숙소 프로필 이미지를 업로드 해주세요',
+        max_length=255,
     )
 
     room_image_thumbnail = ImageSpecField(
