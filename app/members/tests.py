@@ -113,15 +113,15 @@ class UserEmailActivateCheckTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
 
-class UserLoginTest(APITestCase):
+class UserAuthTokenTest(APITestCase):
     """
-    User Login 시에 관련된 테스트
+    User 회원가입 후 AuthToken 전달 관련된 테스트
     """
     URL = '/members/login/'
 
     def test_check_user_email_authentication_validation_error(self):
         """
-        user 회원가입 후 인증 확인이 되지않은 이메일로 로그인 할 때, validationError를 발생
+        user 회원가입 후 토큰 인증 확인이 되지않은 이메일로 로그인 할 때, validationError를 발생
         :return:
         """
         # EMAIL 인증하지않은 (user.activate = False)
@@ -133,20 +133,18 @@ class UserLoginTest(APITestCase):
 
     def test_check_user_email_exist_validation_error(self):
         """
-        가입되지 않은 이메일 주소로 로그인을 할때, validationError 발생
+        가입되지 않은 이메일 주소로 토큰 받기를 시도할 때, validationError 발생
         :return:
         """
         self.client.post(self.URL, data=LOGIN_USER, format='json', )
         self.assertRaises(ValidationError)
 
-    def test_user_login_succeed_status_code_200(self):
+    def test_user_receive_token_succeed_status_code_200(self):
         """
-        user가 로그인에 성공했을 때, HTTP 상태코드 200 인지 확인
+        user가 토큰 전달받기를 성공하였을 때, HTTP 상태코드 200 인지 확인
         :return:
         """
         user = get_dummy_user()
-        # 로그인을 그냥 바로 시켜버림!
-        self.client.force_authenticate(user)
 
         response = self.client.post(self.URL, data=LOGIN_USER, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
