@@ -218,7 +218,7 @@ def crawler():
 
                 rooms_data = {
                     'rooms_name': rooms_name,
-                    'rooms_type': 'OR',
+                    'rooms_type': Rooms.ROOMS_TYPE[0][1],
                     'rooms_tag': location_tag,
                     'rooms_host': user,
                     'days_price': rooms_price,
