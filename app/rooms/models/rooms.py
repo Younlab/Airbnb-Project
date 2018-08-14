@@ -59,6 +59,13 @@ class Rooms(models.Model):
         verbose_name='숙소의 커버 이미지입니다.',
     )
 
+    rooms_cover_thumbnail = ImageSpecField(
+        source='room_image',
+        processors=[ResizeToFill(308, 206)],
+        format='png',
+        options={'quality': 100},
+    )
+
     # 일일 요금
     days_price = models.PositiveIntegerField(
         verbose_name='일일 숙박 요금',
@@ -214,13 +221,6 @@ class RoomImage(models.Model):
         upload_to='room_profile_image',
         verbose_name='숙소 프로필 이미지를 업로드 해주세요',
         max_length=255,
-    )
-
-    room_image_thumbnail = ImageSpecField(
-        source='room_image',
-        processors=[ResizeToFill(308, 206)],
-        format='png',
-        options={'quality': 100},
     )
 
     def __str__(self):

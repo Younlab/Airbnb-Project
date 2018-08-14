@@ -9,16 +9,6 @@ from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
 
 
-class RoomImageThumbnailSerializer(serializers.ModelSerializer):
-    room_image_thumbnail = serializers.ImageField()
-
-    class Meta:
-        model = RoomImage
-        fields = (
-            'room_image_thumbnail',
-        )
-
-
 class RoomImageSerializer(serializers.ModelSerializer):
     room_image = serializers.ImageField()
 
@@ -30,8 +20,7 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 
 class RoomListSerializer(serializers.ModelSerializer):
-    room_images = RoomImageThumbnailSerializer(many=True)
-
+    rooms_cover_thumbnail = serializers.ImageField()
     class Meta:
         model = Rooms
         fields = (
@@ -40,7 +29,7 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_tag',
             'days_price',
             'room_images',
-
+            'rooms_cover_thumbnail',
         )
 
 
