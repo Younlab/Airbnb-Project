@@ -12,12 +12,18 @@ from ..models import Rooms
 User = get_user_model()
 
 
-class LargeResultsSetPagination(PageNumberPagination):
+class Pagination(PageNumberPagination):
+    """
+    Pagination
+    """
     page_size = 18
     page_query_param = 'page'
 
 
 class RoomReservationAPI(generics.ListCreateAPIView):
+    """
+    예약 API
+    """
     serializer_class = RoomReservationSerializer
     queryset = RoomReservation.objects.all()
     permission_classes = (
@@ -39,32 +45,22 @@ class RoomReservationAPI(generics.ListCreateAPIView):
 
 
 class RoomsList(generics.ListAPIView):
+    """
+    전체 숙소 리스트 API
+    """
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
-    pagination_class = LargeResultsSetPagination
+    pagination_class = Pagination
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filter_fields = ('address_city', 'address_district')
 
-
-# class RoomsDetail(generics.RetrieveAPIView):
-#     queryset = Rooms.objects.all()
-#     serializer_class = RoomDetailSerializer
 
 class RoomsDetail(APIView):
+    """
+    숙소 상세페이지 API
+    """
+
     def get(self, request, room_pk, format=None):
         room = Rooms.objects.filter(pk=room_pk)
         serializer = RoomDetailSerializer(room, many=True)
         return Response(serializer.data)
-
-# class RoomReservation(generics.CreateAPIView, generics.RetrieveAPIView):
-#     queryset = RoomReservation.objects.all()
-
-# 필터링, 해당 room 에대한 예약 출력, ex -> "?room=1"
-# filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-# filter_fields = ('room',)
-
-# login 인증을 통과하지 못하면 "인증오류" 발생
-# permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-# serializer_class = RoomReservationSerializer
-
-# login 한 유저만 예약 할 수 있도록 처리
-# def perform_create(self, serializer):
-#     serializer.save(guest=self.request.user)
