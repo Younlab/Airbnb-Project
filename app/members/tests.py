@@ -99,7 +99,7 @@ class UserLoginTest(APITestCase):
 
     def test_check_user_email_authentication_validation_error(self):
         """
-        user 회원가입 후 인증 확인이 되지않은 이메일일 때, validationError를 발생
+        user 회원가입 후 인증 확인이 되지않은 이메일로 로그인 할 때, validationError를 발생
         :return:
         """
         user = User.objects.create_django_user(**dummy_user)
@@ -112,4 +112,17 @@ class UserLoginTest(APITestCase):
         }
 
         self.client.post(self.URL, data=login_user, format='json',)
+        self.assertRaises(ValidationError)
+
+    def test_check_user_email_exist_validation_error(self):
+        """
+        가입되지 않은 이메일 주소로 로그인을 할때, validationError 발생
+        :return:
+        """
+        login_user = {
+            'username': 'not_sign_up_user@test.com',
+            'password': 'test1234'
+        }
+
+        self.client.post(self.URL, data=login_user, format='json', )
         self.assertRaises(ValidationError)
