@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
 import django_filters
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ..models.rooms import RoomReservation
 from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer
@@ -15,6 +17,13 @@ class LargeResultsSetPagination(PageNumberPagination):
     page_query_param = 'page'
 
 
+class RoomReservationAPI(APIView):
+    def get(self, request, room_pk):
+        room = Rooms.objects.get(pk=room_pk)
+        serializer = RoomReservationSerializer(room, many=True)
+        return Response(serializer.data)
+
+
 class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
@@ -25,18 +34,17 @@ class RoomsDetail(generics.RetrieveAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomDetailSerializer
 
-
-class RoomReservation(generics.ListCreateAPIView):
-    queryset = RoomReservation.objects.all()
-
-    # 필터링, 해당 room 에대한 예약 출력, ex -> "?room=1"
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    filter_fields = ('room',)
-
-    # login 인증을 통과하지 못하면 "인증오류" 발생
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = RoomReservationSerializer
-
-    # login 한 유저만 예약 할 수 있도록 처리
-    def perform_create(self, serializer):
-        serializer.save(guest=self.request.user)
+# class RoomReservation(generics.CreateAPIView, generics.RetrieveAPIView):
+#     queryset = RoomReservation.objects.all()
+#
+#     # 필터링, 해당 room 에대한 예약 출력, ex -> "?room=1"
+#     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+#     filter_fields = ('room',)
+#
+#     # login 인증을 통과하지 못하면 "인증오류" 발생
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = RoomReservationSerializer
+#
+#     # login 한 유저만 예약 할 수 있도록 처리
+#     def perform_create(self, serializer):
+#         serializer.save(guest=self.request.user)
