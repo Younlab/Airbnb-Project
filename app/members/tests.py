@@ -7,13 +7,27 @@ from members.tokens import account_activation_token
 
 User = get_user_model()
 
-dummy_user = {
-    'username': 'dummy_username@test.com',
-    'first_name': 'user',
-    'last_name': 'test',
-    'birthday': '000000',
-    'password': 'test1234'
-}
+
+NOT_SIGNUP_DUMMY_USER = {
+        'username': 'dummy_username@test.com',
+        'first_name': 'user',
+        'last_name': 'test',
+        'birthday': '000000',
+        'password': 'test1234',
+    }
+
+LOGIN_USER = {
+            'username': NOT_SIGNUP_DUMMY_USER['username'],
+            'password': NOT_SIGNUP_DUMMY_USER['password'],
+        }
+
+
+# user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
+def get_dummy_user():
+    user = User.objects.create_django_user(**NOT_SIGNUP_DUMMY_USER)
+    user.activate = True
+    user.save()
+    return user
 
 
 class UserListTest(APITestCase):
@@ -27,11 +41,7 @@ class UserListTest(APITestCase):
         superuser가 아닌 일반 유저일 경우에 요청 결과의 HTTP 상태코드가 403인지 확인
         :return:
         """
-        # user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
-        user = User.objects.create_django_user(**dummy_user)
-        user.activate = True
-        user.save()
-
+        user = get_dummy_user()
         # 로그인을 그냥 바로 시켜버림!
         self.client.force_authenticate(user)
 
@@ -52,7 +62,7 @@ class UserSignUpTest(APITestCase):
         json으로 요청하고 201 상태코드를 받아옴
         :return:
         """
-        response = self.client.post(self.URL, data=dummy_user, format='json', )
+        response = self.client.post(self.URL, data=NOT_SIGNUP_DUMMY_USER, format='json', )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_sign_up_wrong_password_occurred_validation_error(self):
@@ -60,6 +70,7 @@ class UserSignUpTest(APITestCase):
         user 회원가입 중 Password가 8자리가 안될 경우, ValidationError 발생
         :return:
         """
+        # 비밀번호가 7자리인 user
         user = {
             'username': 'dummy_username@test.com',
             'first_name': 'user',
@@ -81,10 +92,7 @@ class UserEmailActivateCheckTest(APITestCase):
         user 회원가입 후 발송되는 인증 확인 이메일 token값과 DB에 저장되는 이메일 token 값이 같은지 확인
         :return:
         """
-        # user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
-        user = User.objects.create_django_user(**dummy_user)
-        user.activate = True
-        user.save()
+        user = get_dummy_user()
 
         # user email token 값과 DB상의 토큰 값 비교
         token = account_activation_token.make_token(user)
@@ -102,16 +110,11 @@ class UserLoginTest(APITestCase):
         user 회원가입 후 인증 확인이 되지않은 이메일로 로그인 할 때, validationError를 발생
         :return:
         """
-        user = User.objects.create_django_user(**dummy_user)
-        print(user.activate)
+        # EMAIL 인증하지않은 (user.activate = False)
+        user = User.objects.create_django_user(**NOT_SIGNUP_DUMMY_USER)
         user.save()
 
-        login_user = {
-            'username': 'dummy_username@test.com',
-            'password': 'test1234'
-        }
-
-        self.client.post(self.URL, data=login_user, format='json',)
+        self.client.post(self.URL, data=LOGIN_USER, format='json',)
         self.assertRaises(ValidationError)
 
     def test_check_user_email_exist_validation_error(self):
@@ -119,10 +122,5 @@ class UserLoginTest(APITestCase):
         가입되지 않은 이메일 주소로 로그인을 할때, validationError 발생
         :return:
         """
-        login_user = {
-            'username': 'not_sign_up_user@test.com',
-            'password': 'test1234'
-        }
-
-        self.client.post(self.URL, data=login_user, format='json', )
+        self.client.post(self.URL, data=LOGIN_USER, format='json', )
         self.assertRaises(ValidationError)
