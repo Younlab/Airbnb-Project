@@ -60,7 +60,7 @@ class Rooms(models.Model):
     )
 
     rooms_cover_thumbnail = ImageSpecField(
-        source='room_image',
+        source='rooms_cover_image',
         processors=[ResizeToFill(308, 206)],
         format='png',
         options={'quality': 100},
@@ -275,8 +275,8 @@ class RoomReservation(models.Model):
         verbose_name='체크아웃 날짜',
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    modified = models.DateField(auto_now=True)
 
     def __str__(self):
         return f'{self.guest}, {self.checkin}, {self.checkout}'
