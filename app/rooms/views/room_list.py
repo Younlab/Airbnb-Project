@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, filters
 import django_filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -10,6 +10,14 @@ from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, Roo
 from ..models import Rooms
 
 User = get_user_model()
+
+
+class SnippetPagination(PageNumberPagination):
+    """
+    조각 Pagination
+    """
+    page_size = 4
+    page_size_query_param = 'page_size'
 
 
 class Pagination(PageNumberPagination):
@@ -51,8 +59,6 @@ class RoomsList(generics.ListAPIView):
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
     pagination_class = Pagination
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    filter_fields = ('address_city', 'address_district')
 
 
 class RoomsDetail(APIView):
@@ -64,3 +70,12 @@ class RoomsDetail(APIView):
         room = Rooms.objects.filter(pk=room_pk)
         serializer = RoomDetailSerializer(room, many=True)
         return Response(serializer.data)
+
+
+class MainPageRoomsList(generics.ListAPIView):
+    queryset = Rooms.objects.all()
+    serializer_class = RoomListSerializer
+    pagination_class = SnippetPagination
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend, filters.OrderingFilter,)
+    filter_fields = ('address_city',)
+    ordering_fields = ('created_at',)
