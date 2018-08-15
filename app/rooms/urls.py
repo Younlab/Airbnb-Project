@@ -8,5 +8,6 @@ urlpatterns = [
     path('list/', room_list.RoomsList.as_view(), name='room_list'),
     path('list/<int:room_pk>/', room_list.RoomsDetail.as_view(), name='room_detail'),
     path('list/<int:room_pk>/reservation/', room_list.RoomReservationAPI.as_view(), name='room_reservation'),
+    path('main/snipetlist/', room_list.MainPageRoomsList.as_view(), ),
     path('list/<int:pk>/likes/', room_like.RoomsLikes.as_view(), name='room_like'),
 ]
