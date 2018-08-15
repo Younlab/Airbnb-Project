@@ -15,10 +15,14 @@ User = get_user_model()
 class ChangePassword(APIView):
     def post(self, request, uidb64):
         try:
+            # url에서의 uid를 받아 디코딩하여 값을 받아온다.
             uid = force_text(urlsafe_base64_decode(uidb64))
+            # 디코딩된 uid를 이용하여 user를 불러온다
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
+        # serializer에 instance랑 data를 보내서 기존의 password값에서 새로운 password값으로
+        # 변경하게끔 만듬
         if user is not None:
             serializer = ChangePasswordSerializer(instance=user, data=request.data)
             if serializer.is_valid():
