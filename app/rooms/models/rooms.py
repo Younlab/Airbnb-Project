@@ -184,13 +184,16 @@ class Rooms(models.Model):
     )
 
     # 생성 일자 자동 저장
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # 수정 일자 자동 저장
-    modified_date = models.DateField(auto_now=True)
+    modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.pk} {self.rooms_host} {self.rooms_name}'
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class RoomRules(models.Model):
@@ -275,8 +278,11 @@ class RoomReservation(models.Model):
         verbose_name='체크아웃 날짜',
     )
 
-    created_at = models.DateField(auto_now_add=True)
-    modified = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.guest}, {self.checkin}, {self.checkout}'
+
+    class Meta:
+        ordering = ['-created_at']

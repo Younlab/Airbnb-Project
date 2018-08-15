@@ -25,12 +25,14 @@ class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = (
+            'pk',
             'rooms_host',
             'rooms_type',
             'rooms_name',
             'rooms_tag',
             'days_price',
             'rooms_cover_thumbnail',
+            'created_at',
         )
 
 
