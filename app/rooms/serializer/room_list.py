@@ -31,6 +31,7 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_tag',
             'days_price',
             'rooms_cover_thumbnail',
+            'created_at',
         )
 
 
