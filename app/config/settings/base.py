@@ -28,7 +28,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'members.backends.SettingsBackend',
 ]
-
+# IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'path.to.MyImageCacheBackend'
+# IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'imagekit.imagecache.NonValidatingImageCacheBackend'
 # Email
 EMAIL_BACKEND = secrets['EMAIL_BACKEND']
 EMAIL_USE_TLS = True

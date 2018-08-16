@@ -24,7 +24,7 @@ def crawler():
     # city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시',
     #              '광주광역시', '대전광역시', '울산광역시', '세종특별자치시',
     #              '경기도', '강원도']
-    city_list = ['서울특별시']
+    city_list = ['울산']
 
     # 도시 리스트의 목록을 순환하라
     for city in city_list:
@@ -249,18 +249,23 @@ def crawler():
 
                 rooms.rooms_cover_image.save('rooms_cover_image.png',
                                              ContentFile(requests.get(room_detail_image_cover).content))
-
+                # driver.implicitly_wait(3)
+                rooms.save()
+                num = 1
                 for image_add in rooms_image_list:
+                    num += 1
+                    # driver.implicitly_wait(3)
                     rooms_images = RoomImage.objects.create(room=rooms)
-                    rooms_images.room_image.save('rooms_profile_image.png',
+                    rooms_images.room_image.save(f'rooms_profile_image{num}.png',
                                                  ContentFile(requests.get(image_add).content))
+                    rooms.save()
 
                 for facilities_add in rooms_facilities:
                     rooms.room_facilities.update_or_create(facilities=facilities_add)
 
                 for rules_add in rooms_rules:
                     rooms.room_rules.update_or_create(rule_list=rules_add)
-                rooms.save()
+                    rooms.save()
 
                 if rooms_created is True:
                     print(f'{rooms_name} 생성 완료')
