@@ -138,7 +138,7 @@ class UserEmailActivateCheckTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
 
-class UserAuthTokenTest(APITestCase):
+class UserAuthTokenReceiveCheckTest(APITestCase):
     """
     User 회원가입 후 AuthToken 전달 관련된 테스트
     """
