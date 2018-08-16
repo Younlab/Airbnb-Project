@@ -122,6 +122,10 @@ class UserEmailActivateCheckTest(APITestCase):
         self.assertTrue(account_activation_token.check_token(user, token))
 
     def test_check_user_email_url_status_code_200(self):
+        """
+        user 회원가입 후 Email Token 인증 url 에서 HTTP 상태코드 201인지 확인
+        :return:
+        """
         user = get_dummy_user()
         email_auth = {
             'user': user,
