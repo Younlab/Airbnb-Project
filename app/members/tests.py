@@ -198,7 +198,7 @@ class UserDeleteTokenTest(APITestCase):
         # 테스트 코드 내에서 토큰 인증하기
         # 헤더에 로그인 토큰 올린거임??
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-
+        # self.client.force_authenticate(user)
         response = self.client.post(self.URL)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -210,13 +210,8 @@ class UserProfileTest(APITestCase):
     URL = '/members/profile/'
 
     def test_get_user_profile_status_code_200(self):
-        get_dummy_user()
-        response = self.client.post(
-            '/members/login/',
-            data=LOGIN_USER,
-        )
-        token = response.json()['token']
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
 
         response = self.client.get(self.URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
