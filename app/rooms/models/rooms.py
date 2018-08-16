@@ -57,6 +57,7 @@ class Rooms(models.Model):
     rooms_cover_image = models.ImageField(
         upload_to='cover_image',
         verbose_name='숙소의 커버 이미지입니다.',
+        max_length=255,
     )
 
     rooms_cover_thumbnail = ImageSpecField(

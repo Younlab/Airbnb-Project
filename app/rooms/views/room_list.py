@@ -87,7 +87,7 @@ class MainPageRoomsList(generics.ListAPIView):
             address_response[i] = RoomListSerializer(Rooms.objects.filter(address_city__contains=i)[:limit_num],
                                                      many=True).data
             # aws
-            address_response[i].append({'link': f'https://leesu.kr/rooms/list?address_city={i}'})
+            address_response[i].append({'link': f'https://leesoo.kr/rooms/list?address_city={i}'})
             # localhost
             # address_response[i].append({'link': f'http://localhost:8000/rooms/list?address_city={i}'})
         return Response(address_response)
