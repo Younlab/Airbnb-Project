@@ -186,14 +186,11 @@ class UserDeleteTokenTest(APITestCase):
         user가 (토큰 삭제)로그아웃시에 HTTP 상태코드가 204인지 확인
         :return:
         """
-        user = get_dummy_user()
+        get_dummy_user()
         # 테스트 코드 내에서 토큰 받아오기
         response = self.client.post(
             '/members/login/',
-            data={
-                'username': NOT_SIGNUP_DUMMY_USER['username'],
-                'password': NOT_SIGNUP_DUMMY_USER['password'],
-            },
+            data=LOGIN_USER,
         )
 
         token = response.json()['token']
@@ -204,3 +201,22 @@ class UserDeleteTokenTest(APITestCase):
 
         response = self.client.post(self.URL)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class UserProfileTest(APITestCase):
+    """
+    User Profile 조회, 수정, 삭제 관련 테스트
+    """
+    URL = '/members/profile/'
+
+    def test_get_user_profile_status_code_200(self):
+        get_dummy_user()
+        response = self.client.post(
+            '/members/login/',
+            data=LOGIN_USER,
+        )
+        token = response.json()['token']
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
