@@ -84,7 +84,10 @@ class MainPageRoomsList(generics.ListAPIView):
         address_response = {}
         address_list = ['서울', '인천', '대구', '부산']
         for i in address_list:
-            address_response[i] = RoomListSerializer(Rooms.objects.filter(address_city__contains=i)[:limit_num], many=True).data
+            address_response[i] = RoomListSerializer(Rooms.objects.filter(address_city__contains=i)[:limit_num],
+                                                     many=True).data
+            # aws
             address_response[i].append({'link': f'https://leesu.kr/rooms/list?address_city={i}'})
+            # localhost
+            # address_response[i].append({'link': f'http://localhost:8000/rooms/list?address_city={i}'})
         return Response(address_response)
-
