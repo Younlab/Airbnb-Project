@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -19,9 +21,9 @@ NOT_SIGNUP_DUMMY_USER = {
     }
 
 LOGIN_USER = {
-            'username': NOT_SIGNUP_DUMMY_USER['username'],
-            'password': NOT_SIGNUP_DUMMY_USER['password'],
-        }
+        'username': NOT_SIGNUP_DUMMY_USER['username'],
+        'password': NOT_SIGNUP_DUMMY_USER['password'],
+    }
 
 
 # user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
@@ -82,6 +84,25 @@ class UserSignUpTest(APITestCase):
         }
         self.client.post(self.URL, data=user, format='json',)
         self.assertRaises(ValidationError)
+
+    def test_user_create_save_db(self):
+        """
+        user signup 요청 후 실제 DB에 저장되었는지 (모든 필드값이 정상적으로 저장되는지)
+        :return:
+        """
+        response = self.client.post(self.URL, data=NOT_SIGNUP_DUMMY_USER, format='json',)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+
+        check_fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'birthday',
+            'password',
+        ]
+        for field in check_fields:
+            self.assertEqual(data[field], NOT_SIGNUP_DUMMY_USER[field])
 
 
 class UserEmailActivateCheckTest(APITestCase):
@@ -144,7 +165,7 @@ class UserAuthTokenTest(APITestCase):
         user가 토큰 전달받기를 성공하였을 때, HTTP 상태코드 200 인지 확인
         :return:
         """
-        user = get_dummy_user()
+        get_dummy_user()
 
         response = self.client.post(self.URL, data=LOGIN_USER, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
