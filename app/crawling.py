@@ -24,6 +24,7 @@ def crawler():
     city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시',
                  '광주광역시', '대전광역시', '울산광역시', '세종특별자치시',
                  '경기도', '강원도']
+    # city_list = ['부산광역시']
 
     # 도시 리스트의 목록을 순환하라
     for city in city_list:
@@ -86,11 +87,14 @@ def crawler():
                 rooms_host_first_name = listing_dict['user']['host_name']
                 rooms_host_profile_img = listing_dict['user']['profile_pic_path']
 
-                try:
+                location_tag_source = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
+
+                if location_tag_source is True:
                     # 지역 테그
-                    location_tag = soup.select_one('div._1hpgssa1 > div:nth-of-type(2) > div').get('data-location')
-                except:
-                    location_tag = 'null'
+                    location_tag = location_tag_source
+                else:
+                    location_tag = listing_dict['localized_city']
+
                 try:
                     # 숙박 인원
                     rooms_personnel_source = soup.select_one(
