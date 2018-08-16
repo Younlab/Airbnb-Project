@@ -24,7 +24,7 @@ AWS_S3_SIGNATURE_VERSION = secrets['AWS_S3_SIGNATURE_VERSION']
 
 # Media
 DEFAULT_FILE_STORAGE = 'config.storages.S3DefaultStorage'
-
+IMAGEKIT_DEFAULT_FILE_STORAGE = 'config.storages.DefaultFilesStorage'
 # Log
 LOG_DIR = '/var/log/django'
 if not os.path.exists(LOG_DIR):
