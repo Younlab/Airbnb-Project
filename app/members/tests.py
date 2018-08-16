@@ -171,5 +171,36 @@ class UserAuthTokenReceiveCheckTest(APITestCase):
         """
         get_dummy_user()
 
-        response = self.client.post(self.URL, data=LOGIN_USER, format='json')
+        response = self.client.post(self.URL, data=LOGIN_USER, format='json',)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class UserDeleteTokenTest(APITestCase):
+    """
+    user (토큰 삭제)로그아웃 테스트
+    """
+    URL = '/members/logout/'
+
+    def test_user_log_out_status_code_204(self):
+        """
+        user가 (토큰 삭제)로그아웃시에 HTTP 상태코드가 204인지 확인
+        :return:
+        """
+        user = get_dummy_user()
+        # 테스트 코드 내에서 토큰 받아오기
+        response = self.client.post(
+            '/members/login/',
+            data={
+                'username': NOT_SIGNUP_DUMMY_USER['username'],
+                'password': NOT_SIGNUP_DUMMY_USER['password'],
+            },
+        )
+
+        token = response.json()['token']
+
+        # 테스트 코드 내에서 토큰 인증하기
+        # 헤더에 로그인 토큰 올린거임??
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        response = self.client.post(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
