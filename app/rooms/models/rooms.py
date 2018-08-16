@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from imagekit.models import ImageSpecField
-from pilkit.processors import ResizeToFill
+from pilkit.processors import Thumbnail
 
 __all__ = (
     'Rooms',
@@ -40,7 +40,7 @@ class Rooms(models.Model):
     rooms_tag = models.CharField(
         verbose_name='태그',
         help_text='검색에 사용될 지역 태그를 입력하세요',
-        max_length=100,
+        max_length=150,
         blank=True,
     )
 
@@ -62,7 +62,7 @@ class Rooms(models.Model):
 
     rooms_cover_thumbnail = ImageSpecField(
         source='rooms_cover_image',
-        processors=[ResizeToFill(308, 206)],
+        processors=[Thumbnail(308, 206)],
         format='png',
         options={'quality': 100},
     )
@@ -77,6 +77,7 @@ class Rooms(models.Model):
     rooms_description = models.TextField(
         verbose_name='숙소 개요',
         help_text='당신의 숙소를 소개하세요, 게스트의 흥미를 유발하는것이 중요합니다.',
+        max_length=255,
     )
 
     # 객실 수
