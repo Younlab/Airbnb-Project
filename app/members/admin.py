@@ -18,6 +18,7 @@ class UserAdmin(BaseUserAdmin):
                 'email',
                 'profile_image',
                 'phone_number',
+                'gender',
                 'is_host',
             ),
         }),
