@@ -210,6 +210,10 @@ class UserProfileTest(APITestCase):
     URL = '/members/profile/'
 
     def test_get_user_profile_status_code_200(self):
+        """
+        user profile 조회시 성공적으로 HTTP 상태코드가 200인지 확인
+        :return:
+        """
         user = get_dummy_user()
         self.client.force_authenticate(user)
 
@@ -217,6 +221,10 @@ class UserProfileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_patch_user_profile_status_code_201(self):
+        """
+        user profile patch(일부 수정) 성공시 HTTP 상태코드가 201인지 확인
+        :return:
+        """
         user = get_dummy_user()
         self.client.force_authenticate(user)
 
@@ -227,6 +235,10 @@ class UserProfileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_delete_user_profile_status_code_204(self):
+        """
+        user profile delete 시 HTTP 상태코드가 204인지 확인
+        :return:
+        """
         user = get_dummy_user()
         self.client.force_authenticate(user)
 
