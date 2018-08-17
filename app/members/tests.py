@@ -258,3 +258,14 @@ class UserProfileTest(APITestCase):
 
         response = self.client.delete(self.URL)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+    def test_delete_user_profile_save_db(self):
+        """
+        user profile delete 시 DB에 그 정보가 삭제되었는지 확인
+        :return:
+        """
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+        self.client.delete(self.URL)
+        self.assertIs(User.objects.filter(**DUMMY_USER_INFO).exists(), False)
