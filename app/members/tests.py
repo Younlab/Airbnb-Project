@@ -225,3 +225,10 @@ class UserProfileTest(APITestCase):
         }
         response = self.client.patch(self.URL, data=patch_user)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_delete_user_profile_status_code_204(self):
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
+        response = self.client.delete(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
