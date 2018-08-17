@@ -247,7 +247,7 @@ def crawler():
                     defaults=rooms_data,
                 )
 
-                rooms.rooms_cover_image.save('rooms_cover_image.png',
+                rooms.rooms_cover_image.save(f'{room_detail_image_cover}.png',
                                              ContentFile(requests.get(room_detail_image_cover).content))
                 # driver.implicitly_wait(3)
                 rooms.save()
