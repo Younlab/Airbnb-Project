@@ -13,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             'profile_image',
             'phone_number',
             'birthday',
+            'gender',
             'is_host',
             'create_date',
             'likes_posts',
@@ -31,5 +32,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'birthday',
             'first_name',
             'last_name',
+            'gender',
             'is_host',
         )

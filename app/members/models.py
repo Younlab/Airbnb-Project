@@ -21,6 +21,12 @@ class UserManager(DjangoUserManager):
 
 class User(AbstractUser):
 
+    GENDER_CHOICE = (
+        ('N', 'Nothing'),
+        ('F', 'Female'),
+        ('M', 'Male'),
+    )
+
     # User Profile Image
     profile_image = ProcessedImageField(
         upload_to='profile_image',
@@ -51,6 +57,8 @@ class User(AbstractUser):
     # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
     activate = models.BooleanField(default=False)
+
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICE, default='N')
 
     # 회원가입 날짜
     create_date = models.DateField(auto_now_add=True)
