@@ -26,8 +26,10 @@ ADMIN_PASSWORD = secrets['ADMIN_PASSWORD']
 AUTH_USER_MODEL = 'members.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+
     'members.backends.SettingsBackend',
 ]
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'config.settings.imagekit_strategy.FixJustInTime'
 # IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'path.to.MyImageCacheBackend'
 IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'imagekit.imagecache.NonValidatingImageCacheBackend'
 # Email
