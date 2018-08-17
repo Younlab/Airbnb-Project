@@ -12,7 +12,7 @@ from members.tokens import account_activation_token
 User = get_user_model()
 
 
-NOT_SIGNUP_DUMMY_USER = {
+DUMMY_USER_INFO = {
         'username': 'dummy_username@test.com',
         'first_name': 'user',
         'last_name': 'test',
@@ -21,14 +21,14 @@ NOT_SIGNUP_DUMMY_USER = {
     }
 
 LOGIN_USER = {
-        'username': NOT_SIGNUP_DUMMY_USER['username'],
-        'password': NOT_SIGNUP_DUMMY_USER['password'],
+        'username': DUMMY_USER_INFO['username'],
+        'password': DUMMY_USER_INFO['password'],
     }
 
 
 # user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
 def get_dummy_user():
-    user = User.objects.create_django_user(**NOT_SIGNUP_DUMMY_USER)
+    user = User.objects.create_django_user(**DUMMY_USER_INFO)
     user.activate = True
     user.save()
     return user
@@ -66,7 +66,7 @@ class UserSignUpTest(APITestCase):
         json으로 요청하고 201 상태코드를 받아옴
         :return:
         """
-        response = self.client.post(self.URL, data=NOT_SIGNUP_DUMMY_USER, format='json', )
+        response = self.client.post(self.URL, data=DUMMY_USER_INFO, format='json', )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_sign_up_wrong_password_occurred_validation_error(self):
@@ -90,7 +90,7 @@ class UserSignUpTest(APITestCase):
         user signup 요청 후 실제 DB에 저장되었는지 (모든 필드값이 정상적으로 저장되는지)
         :return:
         """
-        response = self.client.post(self.URL, data=NOT_SIGNUP_DUMMY_USER, format='json',)
+        response = self.client.post(self.URL, data=DUMMY_USER_INFO, format='json', )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
 
@@ -102,7 +102,7 @@ class UserSignUpTest(APITestCase):
             'password',
         ]
         for field in check_fields:
-            self.assertEqual(data[field], NOT_SIGNUP_DUMMY_USER[field])
+            self.assertEqual(data[field], DUMMY_USER_INFO[field])
 
 
 class UserEmailActivateCheckTest(APITestCase):
@@ -150,7 +150,7 @@ class UserAuthTokenReceiveCheckTest(APITestCase):
         :return:
         """
         # EMAIL 인증하지않은 (user.activate = False)
-        user = User.objects.create_django_user(**NOT_SIGNUP_DUMMY_USER)
+        user = User.objects.create_django_user(**DUMMY_USER_INFO)
         user.save()
 
         self.client.post(self.URL, data=LOGIN_USER, format='json',)
@@ -227,12 +227,26 @@ class UserProfileTest(APITestCase):
         """
         user = get_dummy_user()
         self.client.force_authenticate(user)
-
         patch_user = {
             'birthday': '000001'
         }
         response = self.client.patch(self.URL, data=patch_user)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_patch_user_profile_save_db(self):
+        """
+        user profile patch 시에 DB에 저장이 잘 되는지 확인
+        :return:
+        """
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+        patch_user = {
+            'birthday': '000001'
+        }
+        response = self.client.patch(self.URL, data=patch_user)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data['birthday'], patch_user['birthday'])
 
     def test_delete_user_profile_status_code_204(self):
         """
