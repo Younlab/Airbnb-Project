@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated as DefaultIsAuthenticated
 
 __all__ = (
     'AdminUserReadOnly',
@@ -19,3 +20,7 @@ class AdminUserReadOnly(permissions.BasePermission):
         # True or False를 반환
         # request.user의 어떤 요소를 검사 후, 권한이 있다면 True 아니면 False를 리턴
         return request.user.is_superuser
+
+
+class IsAuthenticated(DefaultIsAuthenticated):
+    pass
