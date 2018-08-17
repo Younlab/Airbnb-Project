@@ -1,5 +1,3 @@
-import itertools
-
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, status
 import django_filters
@@ -12,14 +10,6 @@ from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, Roo
 from ..models import Rooms
 
 User = get_user_model()
-
-
-class SnippetPagination(PageNumberPagination):
-    """
-    조각 Pagination
-    """
-    page_size = 4
-    page_size_query_param = 'page_size'
 
 
 class Pagination(PageNumberPagination):
@@ -74,6 +64,12 @@ class RoomsDetail(APIView):
         room = Rooms.objects.filter(pk=room_pk)
         serializer = RoomDetailSerializer(room, many=True)
         return Response(serializer.data)
+
+
+class RoomsCreate(APIView):
+    def post(self, request, format=None):
+        room = Rooms.objects.all()
+
 
 
 class MainPageRoomsList(generics.ListAPIView):
