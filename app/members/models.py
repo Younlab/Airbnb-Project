@@ -54,6 +54,10 @@ class User(AbstractUser):
     facebook_id = models.CharField(max_length=200, blank=True)
     is_facebook_user = models.BooleanField(default=False)
 
+    # kakao 가입자는 자동으로 True 표시 되게끔 구현
+    kakao_id = models.CharField(max_length=200, blank=True)
+    is_kakao_user = models.BooleanField(default=False)
+
     # 자신이 호스트일 경우 True
     is_host = models.BooleanField(default=False)
     activate = models.BooleanField(default=False)
