@@ -1,7 +1,7 @@
 import json
 import os
 import re
-
+from multiprocessing import Pool
 import django
 import requests
 from bs4 import BeautifulSoup
@@ -17,14 +17,18 @@ from rooms.models import Rooms, RoomImage
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 User = get_user_model()
+
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument("disable-gpu")
+
 driver = webdriver.Chrome('/Users/sh/Downloads/chromedriver')
 
 
 def crawler():
-    # city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시',
-    #              '광주광역시', '대전광역시', '울산광역시', '세종특별자치시',
-    #              '경기도', '강원도']
-    city_list = ['울산']
+    city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시',
+                 '광주광역시', '대전광역시', '울산광역시', '세종특별자치시',
+                 '경기도', '강원도']
 
     # 도시 리스트의 목록을 순환하라
     for city in city_list:
@@ -79,8 +83,8 @@ def crawler():
                     rooms_price = '32800'
 
                 # 디테일 페이지 커버 이미지
-                room_detail_image_cover_source = soup.select_one('div._30cuyx5').get('style')
-                room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
+                room_detail_image_cover = soup.select_one('div._1e3y8tsi > img').get('src')
+                # room_detail_image_cover = re.findall(r'\w*http\S*\w*jpg', room_detail_image_cover_source)[0]
 
                 # host 정보
                 rooms_host_id = listing_dict['user']['id']
@@ -274,6 +278,7 @@ def crawler():
 
                 print('크롤링 완료')
 
-
 if __name__ == '__main__':
-    crawler()
+    pool = Pool(processes=4)
+    pool.map(crawler())
+    # crawler()
