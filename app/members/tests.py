@@ -259,7 +259,6 @@ class UserProfileTest(APITestCase):
         response = self.client.delete(self.URL)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-
     def test_delete_user_profile_save_db(self):
         """
         user profile delete 시 DB에 그 정보가 삭제되었는지 확인
@@ -269,3 +268,21 @@ class UserProfileTest(APITestCase):
         self.client.force_authenticate(user)
         self.client.delete(self.URL)
         self.assertIs(User.objects.filter(**DUMMY_USER_INFO).exists(), False)
+
+
+class UserLikesRoomTest(APITestCase):
+    """
+    User가 Rooms를 Likes 할 때 관련 테스트
+    """
+    URL = '/members/likes/'
+
+    def test_user_likes_rooms_status_code_200(self):
+        """
+        user가 likes Room 할 때 상태코드 200이 돌아오는지
+        :return:
+        """
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
+        response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
