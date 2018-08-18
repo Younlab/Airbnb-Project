@@ -23,10 +23,12 @@ SECRET_KEY = secrets['SECRET_KEY']
 # Auth
 ADMIN_USERNAME = secrets['ADMIN_USERNAME']
 ADMIN_PASSWORD = secrets['ADMIN_PASSWORD']
+KAKAO_APP_ID = secrets['KAKAO_APP_ID']
 AUTH_USER_MODEL = 'members.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'members.backends.SettingsBackend',
+    'members.backends.KakaoBackend',
 ]
 # IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'path.to.MyImageCacheBackend'
 # IMAGEKIT_DEFAULT_IMAGE_CACHE_BACKEND = 'imagekit.imagecache.NonValidatingImageCacheBackend'
