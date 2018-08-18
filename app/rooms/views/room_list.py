@@ -25,7 +25,6 @@ class RoomReservationAPI(generics.ListCreateAPIView):
     예약 API
     """
     serializer_class = RoomReservationSerializer
-    queryset = RoomReservation.objects.all()
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
