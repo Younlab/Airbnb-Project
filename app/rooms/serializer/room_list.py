@@ -20,10 +20,12 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 
 class RoomListSerializer(serializers.ModelSerializer):
-    rooms_cover_thumbnail = serializers.ImageField()
+    rooms_cover_thumbnail = serializers.ImageField(read_only=True)
+    rooms_host = UserSerializer(read_only=True)
 
     class Meta:
         model = Rooms
+        # fields = '__all__'
         fields = (
             'pk',
             'rooms_host',
@@ -34,6 +36,12 @@ class RoomListSerializer(serializers.ModelSerializer):
             'rooms_cover_thumbnail',
             'created_at',
         )
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data['rooms_host'] = request.user
+        rooms = super().create(validated_data)
+        return rooms
 
 
 class RoomReservationSerializer(serializers.ModelSerializer):
@@ -111,7 +119,7 @@ class RoomRuleSerializer(serializers.ModelSerializer):
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
-    rooms_host = UserSerializer()
+    rooms_host = UserSerializer(read_only=True)
     room_facilities = RoomFacilitieSerializer(many=True)
     room_reservations = RoomReservationSerializer(many=True)
     room_rules = RoomRuleSerializer(many=True)
@@ -121,7 +129,6 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = (
-            'pk',
             'rooms_type',
             'rooms_name',
             'rooms_tag',
