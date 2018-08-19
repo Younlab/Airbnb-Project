@@ -274,7 +274,7 @@ class UserLikesRoomTest(APITestCase):
 
     def test_user_likes_rooms_status_code_200(self):
         """
-        user가 likes Room 할 때 상태코드 200이 돌아오는지
+        user가 likes한 rooms list를 가져올 때 상태코드 200이 돌아오는지
         :return:
         """
         user = get_dummy_user()
