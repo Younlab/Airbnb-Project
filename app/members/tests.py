@@ -28,10 +28,14 @@ LOGIN_USER = {
 
 # user 회원가입 시키기 & 이메일 인증 True로 바꾸고 저장
 def get_dummy_user():
-    user = User.objects.create_django_user(**DUMMY_USER_INFO)
-    user.activate = True
-    user.save()
-    return user
+    try:
+        user = User.objects.get(**DUMMY_USER_INFO)
+        return user
+    except User.DoesNotExist:
+        user = User.objects.create_django_user(**DUMMY_USER_INFO)
+        user.activate = True
+        user.save()
+        return user
 
 
 class UserListTest(APITestCase):
@@ -209,14 +213,15 @@ class UserProfileTest(APITestCase):
     """
     URL = '/members/profile/'
 
+    def setUp(self):
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
     def test_get_user_profile_status_code_200(self):
         """
         user profile 조회시 성공적으로 HTTP 상태코드가 200인지 확인
         :return:
         """
-        user = get_dummy_user()
-        self.client.force_authenticate(user)
-
         response = self.client.get(self.URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -225,8 +230,6 @@ class UserProfileTest(APITestCase):
         user profile patch(일부 수정) 성공시 HTTP 상태코드가 201인지 확인
         :return:
         """
-        user = get_dummy_user()
-        self.client.force_authenticate(user)
         patch_user = {
             'birthday': '000001'
         }
@@ -238,8 +241,6 @@ class UserProfileTest(APITestCase):
         user profile patch 시에 DB에 저장이 잘 되는지 확인
         :return:
         """
-        user = get_dummy_user()
-        self.client.force_authenticate(user)
         patch_user = {
             'birthday': '000001'
         }
@@ -253,19 +254,31 @@ class UserProfileTest(APITestCase):
         user profile delete 시 HTTP 상태코드가 204인지 확인
         :return:
         """
-        user = get_dummy_user()
-        self.client.force_authenticate(user)
-
         response = self.client.delete(self.URL)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
 
     def test_delete_user_profile_save_db(self):
         """
         user profile delete 시 DB에 그 정보가 삭제되었는지 확인
         :return:
         """
-        user = get_dummy_user()
-        self.client.force_authenticate(user)
         self.client.delete(self.URL)
         self.assertIs(User.objects.filter(**DUMMY_USER_INFO).exists(), False)
+
+
+class UserLikesRoomTest(APITestCase):
+    """
+    User가 Rooms를 Likes 할 때 관련 테스트
+    """
+    URL = '/members/likes/'
+
+    def test_user_likes_rooms_status_code_200(self):
+        """
+        user가 likes Room 할 때 상태코드 200이 돌아오는지
+        :return:
+        """
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
+        response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
