@@ -29,3 +29,21 @@ def get_dummy_user():
         user.save()
         return user
 
+
+class RoomListTest(APITestCase):
+    """
+    Rooms List 관련 테스트
+    """
+    URL = '/rooms/list/'
+
+    def setUp(self):
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
+    def test_get_rooms_list_status_code_200(self):
+        """
+        Room List 불러올 때 HTTP 상태 코드가 200인지
+        :return:
+        """
+        response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
