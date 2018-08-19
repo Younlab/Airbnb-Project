@@ -8,6 +8,21 @@ from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
 
 
+class RoomFacilitieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomFacilities
+        fields = (
+            'facilities',
+        )
+
+
+class RoomRuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomRules
+        fields = (
+            'rule_list',
+        )
+
 
 class RoomImageSerializer(serializers.ModelSerializer):
     room_image = serializers.ImageField()
@@ -23,6 +38,8 @@ class RoomListSerializer(serializers.ModelSerializer):
     rooms_cover_thumbnail = serializers.ImageField(read_only=True)
     rooms_host = UserSerializer(read_only=True)
     room_images = RoomImageSerializer(many=True, read_only=True)
+    room_rules = RoomRuleSerializer(many=True, read_only=True)
+    room_facilities = RoomFacilitieSerializer(many=True, read_only=True)
 
     class Meta:
         model = Rooms
@@ -79,12 +96,19 @@ class RoomListSerializer(serializers.ModelSerializer):
         num = 1
 
         # image list
-        for covers in request.data.getlist('room_images'):
-            # print(covers)
-            rooms_images = RoomImage.objects.create(room=rooms)
-            # print(rooms_images)
-            rooms_images.room_image.save(f'image_list_no_{covers.name}{num}.png', covers)
-            num += 1
+        if request.FILES:
+            for covers in request.data.getlist('room_images'):
+                # print(covers)
+                rooms_images = RoomImage.objects.create(room=rooms)
+                # print(rooms_images)
+                rooms_images.room_image.save(f'image_list_no_{covers.name}{num}.png', covers)
+                num += 1
+
+        for rule in request.data.getlist('rule_list'):
+            rooms.room_rules.create(rule_list=rule)
+
+        for facilities in request.data.getlist('facilities'):
+            rooms.room_facilities.create(facilities=facilities)
 
         request.user.is_host = True
         request.user.save()
@@ -147,22 +171,6 @@ class RoomReservationSerializer(serializers.ModelSerializer):
         # reservation = super().create(validated_data)
         # return reservation
         return RoomReservation.objects.create(**validated_data)
-
-
-class RoomFacilitieSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomFacilities
-        fields = (
-            'facilities',
-        )
-
-
-class RoomRuleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomRules
-        fields = (
-            'rule_list',
-        )
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
