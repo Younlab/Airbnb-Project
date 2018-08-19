@@ -1,12 +1,12 @@
 from datetime import timedelta
 
-from django.conf import settings
 from rest_framework import serializers, status
 from rest_framework.generics import get_object_or_404
 
 from members.serializers.user import UserSerializer
 from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
 from ..models import Rooms
+
 
 
 class RoomImageSerializer(serializers.ModelSerializer):
@@ -22,25 +22,72 @@ class RoomImageSerializer(serializers.ModelSerializer):
 class RoomListSerializer(serializers.ModelSerializer):
     rooms_cover_thumbnail = serializers.ImageField(read_only=True)
     rooms_host = UserSerializer(read_only=True)
+    room_images = RoomImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Rooms
-        # fields = '__all__'
+        # fields = (
+        #     'pk',
+        #     'rooms_host',
+        #     'rooms_type',
+        #     'rooms_name',
+        #     'rooms_tag',
+        #     'days_price',
+        #     'rooms_cover_thumbnail',
+        #     'room_images',
+        #     'created_at',
+        # )
         fields = (
-            'pk',
-            'rooms_host',
+            'rooms_cover_thumbnail',
             'rooms_type',
             'rooms_name',
             'rooms_tag',
+            'rooms_host',
+            'rooms_cover_image',
+            'rooms_type',
+            'room_images',
+            'rooms_amount',
+            'rooms_bed',
+            'rooms_personnel',
+            'rooms_bathroom',
             'days_price',
-            'rooms_cover_thumbnail',
+            'room_rules',
+            'room_facilities',
+            'rooms_description',
+            'check_in_minimum',
+            'check_in_maximum',
+            'room_reservations',
+            'refund',
+            'address_country',
+            'address_city',
+            'address_district',
+            'address_detail',
+            'address_latitude',
+            'address_longitude',
             'created_at',
+            'modified_date',
         )
 
     def create(self, validated_data):
         request = self.context.get('request')
         validated_data['rooms_host'] = request.user
         rooms = super().create(validated_data)
+
+        # image cover
+        for cover in request.data.getlist('rooms_cover_image'):
+            rooms.rooms_cover_image.save(cover.name, cover)
+        num = 1
+
+        # image list
+        for covers in request.data.getlist('room_images'):
+            # print(covers)
+            rooms_images = RoomImage.objects.create(room=rooms)
+            # print(rooms_images)
+            rooms_images.room_image.save(f'image_list_no{num}', covers)
+            num += 1
+
+        request.user.is_host = True
+        request.user.save()
         return rooms
 
 
