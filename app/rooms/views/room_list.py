@@ -25,7 +25,6 @@ class RoomReservationAPI(generics.ListCreateAPIView):
     예약 API
     """
     serializer_class = RoomReservationSerializer
-    queryset = RoomReservation.objects.all()
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
@@ -44,10 +43,13 @@ class RoomReservationAPI(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class RoomsList(generics.ListAPIView):
+class RoomsList(generics.ListCreateAPIView):
     """
     전체 숙소 리스트 API
     """
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
     pagination_class = Pagination
@@ -66,12 +68,6 @@ class RoomsDetail(APIView):
         return Response(serializer.data)
 
 
-class RoomsCreate(APIView):
-    def post(self, request, format=None):
-        room = Rooms.objects.all()
-
-
-
 class MainPageRoomsList(generics.ListAPIView):
     serializer_class = RoomListSerializer
 
@@ -84,6 +80,4 @@ class MainPageRoomsList(generics.ListAPIView):
                                                      many=True).data
             # aws
             address_response[i].append({'link': f'https://leesoo.kr/rooms/list?address_city={i}'})
-            # localhost
-            # address_response[i].append({'link': f'http://localhost:8000/rooms/list?address_city={i}'})
         return Response(address_response)
