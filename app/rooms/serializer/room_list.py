@@ -83,7 +83,7 @@ class RoomListSerializer(serializers.ModelSerializer):
             # print(covers)
             rooms_images = RoomImage.objects.create(room=rooms)
             # print(rooms_images)
-            rooms_images.room_image.save(f'image_list_no{num}', covers)
+            rooms_images.room_image.save(f'image_list_no_{covers.name}{num}.png', covers)
             num += 1
 
         request.user.is_host = True
