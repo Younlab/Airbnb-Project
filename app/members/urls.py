@@ -17,5 +17,5 @@ urlpatterns = [
     path('profile/', modify.UserProfileModified.as_view(), name='user-profile'),
     path('likes/', likes_rooms.UserLikesRooms.as_view(), name='likes-rooms'),
     path('activate/<str:uidb64>/<str:token>/', signup.UserSignupCheck.as_view(), name='signup-check'),
-    path('check/<str:uidb64>/', change_password.ChangePassword.as_view(), name='password-check'),
+    path('check/<str:uidb64>/', change_password.ChangePassword.as_view(), name='password-check-redirect'),
 ]
