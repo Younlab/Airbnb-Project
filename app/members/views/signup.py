@@ -16,7 +16,7 @@ __all__ = (
 User = get_user_model()
 
 
-class UserSignup(generics.ListCreateAPIView):
+class UserSignup(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSignupSerializer
 
