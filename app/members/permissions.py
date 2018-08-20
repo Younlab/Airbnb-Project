@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated as DefaultIsAuthenticated
 
 __all__ = (
     'AdminUserReadOnly',
+    'IsAuthenticated',
 
 )
 
