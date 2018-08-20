@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..models.rooms import RoomReservation
-from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer
+from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer, \
+    RoomCreateSerializer
 from ..models import Rooms
 
 User = get_user_model()
@@ -43,13 +44,18 @@ class RoomReservationAPI(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class RoomsList(generics.ListCreateAPIView):
-    """
-    전체 숙소 리스트 API
-    """
+class RoomsCreate(generics.CreateAPIView):
+    queryset = Rooms.objects.all()
+    serializer_class = RoomCreateSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
+
+
+class RoomsList(generics.ListAPIView):
+    """
+    전체 숙소 리스트 API
+    """
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
     pagination_class = Pagination
