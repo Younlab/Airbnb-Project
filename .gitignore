@@ -1,6 +1,7 @@
 # Project
 /.secrets
 secrets.tar
+.database.yml
 /.static
 /.media
 /app/utils
