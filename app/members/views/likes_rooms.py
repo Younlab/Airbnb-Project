@@ -5,6 +5,10 @@ from rest_framework.views import APIView
 
 from rooms.serializer.room_list import RoomListSerializer
 
+__all__ = (
+    'UserLikesRooms',
+)
+
 User = get_user_model()
 
 

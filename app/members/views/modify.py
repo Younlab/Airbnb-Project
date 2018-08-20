@@ -4,6 +4,10 @@ from rest_framework import generics
 from members.permissions import IsAuthenticated
 from ..serializers.user import UserProfileSerializer
 
+__all__ = (
+    'UserProfileModified',
+)
+
 User = get_user_model()
 
 

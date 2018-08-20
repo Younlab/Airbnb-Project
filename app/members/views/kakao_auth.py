@@ -10,6 +10,10 @@ from rest_framework.views import APIView
 
 from members.serializers.user import UserSerializer
 
+__all__ = (
+    'KakaoAuth',
+)
+
 User = get_user_model()
 
 

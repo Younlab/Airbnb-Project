@@ -5,6 +5,10 @@ from rest_framework.views import APIView
 
 from ..serializers.change_password_email_check import ChangePasswordEmailCheckSerializer
 
+__all__ = (
+    'ChangePasswordCheckEmail',
+)
+
 User = get_user_model()
 
 
