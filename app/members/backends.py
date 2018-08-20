@@ -69,13 +69,15 @@ class KakaoBackend:
                     'kakao_id': kakao_id,
                 }
             )
-            user.profile_image.save(
-                'kakao_profile_image.png',
-                ContentFile(requests.get(profile_image).content)
-            )
-            user.activate = True
-            user.is_kakao_user = True
-            user.save()
+
+            if __ is True:
+                user.profile_image.save(
+                    'kakao_profile_image.png',
+                    ContentFile(requests.get(profile_image).content)
+                )
+                user.activate = True
+                user.is_kakao_user = True
+                user.save()
             return user
 
         access_token = get_access_token(code)
