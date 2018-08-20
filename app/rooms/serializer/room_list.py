@@ -34,28 +34,16 @@ class RoomImageSerializer(serializers.ModelSerializer):
         )
 
 
-class RoomListSerializer(serializers.ModelSerializer):
-    rooms_cover_thumbnail = serializers.ImageField(read_only=True)
-    rooms_host = UserSerializer(read_only=True)
+class RoomCreateSerializer(serializers.ModelSerializer):
     room_images = RoomImageSerializer(many=True, read_only=True)
     room_rules = RoomRuleSerializer(many=True, read_only=True)
     room_facilities = RoomFacilitieSerializer(many=True, read_only=True)
+    rooms_host = UserSerializer(read_only=True)
 
     class Meta:
         model = Rooms
-        # fields = (
-        #     'pk',
-        #     'rooms_host',
-        #     'rooms_type',
-        #     'rooms_name',
-        #     'rooms_tag',
-        #     'days_price',
-        #     'rooms_cover_thumbnail',
-        #     'room_images',
-        #     'created_at',
-        # )
         fields = (
-            'rooms_cover_thumbnail',
+            'pk',
             'rooms_type',
             'rooms_name',
             'rooms_tag',
@@ -101,7 +89,7 @@ class RoomListSerializer(serializers.ModelSerializer):
                 # print(covers)
                 rooms_images = RoomImage.objects.create(room=rooms)
                 # print(rooms_images)
-                rooms_images.room_image.save(f'image_list_no_{covers.name}{num}.png', covers)
+                rooms_images.room_image.save(f'image_list_no_{num}_{covers.name}', covers)
                 num += 1
 
         for rule in request.data.getlist('rule_list'):
@@ -115,7 +103,30 @@ class RoomListSerializer(serializers.ModelSerializer):
         return rooms
 
 
+class RoomListSerializer(serializers.ModelSerializer):
+    rooms_cover_thumbnail = serializers.ImageField(read_only=True)
+    rooms_host = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Rooms
+        fields = (
+            'pk',
+            'rooms_host',
+            'rooms_type',
+            'rooms_name',
+            'rooms_tag',
+            'days_price',
+            'rooms_cover_thumbnail',
+            'room_images',
+            'created_at',
+        )
+
+
 class RoomReservationSerializer(serializers.ModelSerializer):
+    """
+    숙소 예약
+    """
+
     class Meta:
         model = RoomReservation
         fields = '__all__'
@@ -168,8 +179,6 @@ class RoomReservationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        # reservation = super().create(validated_data)
-        # return reservation
         return RoomReservation.objects.create(**validated_data)
 
 
