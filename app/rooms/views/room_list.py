@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+
 from rest_framework import generics, permissions, filters
 import django_filters
 from rest_framework.response import Response
@@ -26,6 +27,14 @@ class RoomsCreate(generics.CreateAPIView):
     )
 
 
+class RoomsFilter(django_filters.FilterSet):
+    address_city = django_filters.CharFilter(field_name='address_city', lookup_expr='contains', )
+
+    class Meta:
+        model = Rooms
+        fields = ['address_city', ]
+
+
 class RoomsList(generics.ListAPIView):
     """
     전체 숙소 리스트 API
@@ -34,7 +43,8 @@ class RoomsList(generics.ListAPIView):
     serializer_class = RoomListSerializer
     pagination_class = Pagination
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter)
-    filter_fields = ('address_city',)
+    # filter_fields = ('address_city',)
+    filter_class = RoomsFilter
     search_fields = ('address_country', 'address_city', 'address_district', 'address_detail', 'rooms_name')
 
 
