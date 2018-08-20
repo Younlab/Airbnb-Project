@@ -8,6 +8,8 @@ ALLOWED_HOSTS = secrets['ALLOWED_HOSTS']
 
 WSGI_APPLICATION = 'config.wsgi.production.application'
 
+DATABASES = secrets['DATABASES']
+
 # django-storages
 INSTALLED_APPS += [
     'storages',
@@ -103,18 +105,3 @@ def get_linux_ec2_private_ip():
 private_ip = get_linux_ec2_private_ip()
 if private_ip:
     ALLOWED_HOSTS.append(private_ip)
-
-if 'test' in sys.argv:
-    # Test DB for Travis CI
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'travis_ci_test',
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'PORT': 5432,
-            'HOST': 'localhost',
-        }
-    }
-else:
-    DATABASES = secrets['DATABASES']
