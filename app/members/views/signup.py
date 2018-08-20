@@ -8,6 +8,11 @@ from rest_framework.views import APIView
 from ..tokens import account_activation_token
 from ..serializers.signup import UserSignupSerializer
 
+__all__ = (
+    'UserSignup',
+    'UserSignupCheck',
+)
+
 User = get_user_model()
 
 

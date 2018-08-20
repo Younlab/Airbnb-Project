@@ -3,20 +3,24 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..serializers.login import UserLoginSerializer
+from ..serializers.auth import UserAuthSerializer
 from ..serializers.user import UserSerializer
+
+__all__ = (
+    'UserAuth',
+    'FacebookUserAuth',
+)
 
 User = get_user_model()
 
 
-class UserLogin(APIView):
+class UserAuth(APIView):
 
-    def post(self, request, format=None):
-        serializer = UserLoginSerializer(data=request.data)
+    def post(self, request):
+        serializer = UserAuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         if user.activate is True:
@@ -30,7 +34,7 @@ class UserLogin(APIView):
         raise serializers.ValidationError("인증되지 않은 이메일 입니다.")
 
 
-class FacebookUserLogin(APIView):
+class FacebookUserAuth(APIView):
     def post(self, request):
         facebook_id = request.data['id']
         username = request.data['email']

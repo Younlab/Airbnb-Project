@@ -9,6 +9,10 @@ from rest_framework.views import APIView
 from ..serializers.user import UserSerializer
 from ..serializers.change_password import ChangePasswordSerializer
 
+__all__ = (
+    'ChangePassword',
+)
+
 User = get_user_model()
 
 
