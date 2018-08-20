@@ -104,8 +104,10 @@ private_ip = get_linux_ec2_private_ip()
 if private_ip:
     ALLOWED_HOSTS.append(private_ip)
 
+test_secrets = json.load(open(os.path.join(SECRETS_DIR, 'test.json')))
+
 if 'test' in sys.argv:
     # Test DB for Travis CI
-    DATABASES = secrets['TEST_DATABASES']
+    DATABASES = test_secrets['DATABASES']
 else:
     DATABASES = secrets['DATABASES']
