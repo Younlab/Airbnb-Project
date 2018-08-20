@@ -49,13 +49,15 @@ class FacebookUserAuth(APIView):
                 'last_name': last_name,
             }
         )
-        user.facebook_id = facebook_id
-        user.activate = True
-        user.profile_image.save(
-            'profile_image.png',
-            ContentFile(requests.get(profile_image).content)
-        )
-        user.save()
+
+        if __ is True:
+            user.facebook_id = facebook_id
+            user.activate = True
+            user.profile_image.save(
+                'profile_image.png',
+                ContentFile(requests.get(profile_image).content)
+            )
+            user.save()
 
         token, __ = Token.objects.get_or_create(user=user)
         data = {
