@@ -10,6 +10,13 @@ from ..models import Rooms
 
 User = get_user_model()
 
+__all__ = (
+    'RoomsCreate',
+    'RoomsList',
+    'RoomsDetail',
+
+)
+
 
 class RoomsCreate(generics.CreateAPIView):
     queryset = Rooms.objects.all()

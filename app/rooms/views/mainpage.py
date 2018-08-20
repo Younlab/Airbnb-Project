@@ -4,6 +4,10 @@ from rest_framework.response import Response
 from ..models import Rooms
 from ..serializer.room_list import RoomListSerializer
 
+__all__ = (
+    'MainPageRoomsList',
+)
+
 
 class MainPageRoomsList(generics.ListAPIView):
     serializer_class = RoomListSerializer

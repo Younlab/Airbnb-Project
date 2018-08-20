@@ -4,7 +4,7 @@ from rest_framework import serializers, status
 from rest_framework.generics import get_object_or_404
 
 from members.serializers.user import UserSerializer
-from ..models.rooms import RoomReservation, RoomFacilities, RoomRules, RoomImage
+from ..models import RoomFacilities, RoomRules, RoomImage, RoomReservation
 from ..models import Rooms
 
 

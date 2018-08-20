@@ -1,8 +1,12 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from ..models.rooms import RoomReservation
+from ..models import RoomReservation
 from ..serializer.room_list import RoomReservationSerializer
+
+__all__ = (
+    'RoomReservationAPI',
+)
 
 
 class RoomReservationAPI(generics.ListCreateAPIView):

@@ -1,5 +1,9 @@
 from rest_framework.pagination import PageNumberPagination
 
+__all__ = (
+    'Pagination',
+)
+
 
 class Pagination(PageNumberPagination):
     """
