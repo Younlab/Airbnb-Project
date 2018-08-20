@@ -105,19 +105,16 @@ class RoomCreateSerializer(serializers.ModelSerializer):
 
 class RoomListSerializer(serializers.ModelSerializer):
     rooms_cover_thumbnail = serializers.ImageField(read_only=True)
-    rooms_host = UserSerializer(read_only=True)
 
     class Meta:
         model = Rooms
         fields = (
             'pk',
-            'rooms_host',
             'rooms_type',
             'rooms_name',
             'rooms_tag',
             'days_price',
             'rooms_cover_thumbnail',
-            'room_images',
             'created_at',
         )
 
