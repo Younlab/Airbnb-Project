@@ -20,8 +20,10 @@ User = get_user_model()
 
 class ChangePassword(APIView):
     def get(self, request, uidb64):
-        url = request.build_absolute_uri()
-        return Response(url)
+        data = {
+            'url': request.build_absolute_uri()
+        }
+        return Response(data)
 
     def post(self, request, uidb64):
         try:
