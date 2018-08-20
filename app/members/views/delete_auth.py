@@ -5,10 +5,14 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+__all__ = (
+    'DeleteUserAuth',
+)
+
 User = get_user_model()
 
 
-class UserLogout(APIView):
+class DeleteUserAuth(APIView):
 
     def post(self, request, format=None):
         if request.user.is_authenticated:

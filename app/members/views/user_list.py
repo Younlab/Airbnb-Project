@@ -4,6 +4,10 @@ from rest_framework import generics
 from ..permissions import AdminUserReadOnly
 from ..serializers.user import UserSerializer
 
+__all__ = (
+    'UserList',
+)
+
 User = get_user_model()
 
 

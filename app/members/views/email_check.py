@@ -5,6 +5,10 @@ from rest_framework.views import APIView
 
 from ..serializers.email_check import UserEmailSerializer
 
+__all__ = (
+    'UserEmailCheck',
+)
+
 User = get_user_model()
 
 

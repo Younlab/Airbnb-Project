@@ -5,7 +5,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 User = get_user_model()
 
 
-class UserLoginSerializer(AuthTokenSerializer):
+class UserAuthSerializer(AuthTokenSerializer):
 
     def validate_username(self, value):
         if not User.objects.filter(username=value).exists():
