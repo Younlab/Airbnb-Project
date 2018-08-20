@@ -27,7 +27,7 @@ class ChangePasswordEmailCheckSerializer(serializers.ModelSerializer):
 
         message = render_to_string('change_password_check_email.html', {
             'user': user,
-            'domain': 'leesoo.kr',
+            'domain': 'localhost:8000',
             'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8')
         })
 
