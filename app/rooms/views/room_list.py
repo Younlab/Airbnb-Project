@@ -1,60 +1,41 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, filters
 import django_filters
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models.rooms import RoomReservation
-from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomReservationSerializer
+from .pagination import Pagination
+from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomCreateSerializer
 from ..models import Rooms
 
 User = get_user_model()
 
+__all__ = (
+    'RoomsCreate',
+    'RoomsList',
+    'RoomsDetail',
 
-class Pagination(PageNumberPagination):
-    """
-    Pagination
-    """
-    page_size = 18
-    page_query_param = 'page'
+)
 
 
-class RoomReservationAPI(generics.ListCreateAPIView):
-    """
-    예약 API
-    """
-    serializer_class = RoomReservationSerializer
+class RoomsCreate(generics.CreateAPIView):
+    queryset = Rooms.objects.all()
+    serializer_class = RoomCreateSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
 
-    def get(self, request, room_pk):
-        room = RoomReservation.objects.filter(room=room_pk)
-        serializer = RoomReservationSerializer(room, many=True)
-        return Response(serializer.data)
 
-    def post(self, request, room_pk):
-        request.data['room'] = room_pk
-        return self.create(request)
-
-    def perform_create(self, serializer):
-        serializer.save(guest=self.request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class RoomsList(generics.ListCreateAPIView):
+class RoomsList(generics.ListAPIView):
     """
     전체 숙소 리스트 API
     """
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-    )
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
     pagination_class = Pagination
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter)
     filter_fields = ('address_city',)
+    search_fields = ('address_country', 'address_city', 'address_district', 'address_detail', 'rooms_name')
 
 
 class RoomsDetail(APIView):
@@ -66,18 +47,3 @@ class RoomsDetail(APIView):
         room = Rooms.objects.filter(pk=room_pk)
         serializer = RoomDetailSerializer(room, many=True)
         return Response(serializer.data)
-
-
-class MainPageRoomsList(generics.ListAPIView):
-    serializer_class = RoomListSerializer
-
-    def list(self, request):
-        limit_num = 4
-        address_response = {}
-        address_list = ['서울', '인천', '대구', '부산']
-        for i in address_list:
-            address_response[i] = RoomListSerializer(Rooms.objects.filter(address_city__contains=i)[:limit_num],
-                                                     many=True).data
-            # aws
-            address_response[i].append({'link': f'https://leesoo.kr/rooms/list?address_city={i}'})
-        return Response(address_response)

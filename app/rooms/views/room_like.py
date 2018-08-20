@@ -7,6 +7,10 @@ from ..models import Rooms
 
 User = get_user_model()
 
+__all__ = (
+    'RoomsLikes',
+)
+
 
 class RoomsLikes(APIView):
 

@@ -5,9 +5,6 @@ from pilkit.processors import Thumbnail
 
 __all__ = (
     'Rooms',
-    'RoomRules',
-    'RoomImage',
-    'RoomFacilities',
 )
 
 
@@ -192,98 +189,6 @@ class Rooms(models.Model):
 
     def __str__(self):
         return f'{self.pk} {self.rooms_host} {self.rooms_name}'
-
-    class Meta:
-        ordering = ['-created_at']
-
-
-class RoomRules(models.Model):
-    """
-    숙소 이용 규칙
-    """
-    room = models.ManyToManyField(
-        Rooms,
-        related_name='room_rules',
-        blank=True
-    )
-    rule_list = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.rule_list
-
-
-class RoomImage(models.Model):
-    """
-    이미지 리스트
-    """
-    room = models.ForeignKey(
-        Rooms,
-        related_name='room_images',
-        on_delete=models.CASCADE,
-    )
-    room_image = models.ImageField(
-        upload_to='room_profile_image',
-        verbose_name='숙소 프로필 이미지를 업로드 해주세요',
-        max_length=255,
-    )
-
-    def __str__(self):
-        return self.room_image
-
-
-class RoomFacilities(models.Model):
-    """
-    편의시설 리스트
-    """
-    room = models.ManyToManyField(
-        Rooms,
-        related_name='room_facilities'
-    )
-
-    facilities = models.CharField(
-        max_length=50,
-    )
-
-    def __str__(self):
-        return self.facilities
-
-
-class RoomReservation(models.Model):
-    """
-    예약 등록
-    """
-    room = models.ForeignKey(
-        Rooms,
-        related_name='room_reservations',
-        on_delete=models.CASCADE,
-    )
-
-    guest = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    guest_personnel = models.PositiveSmallIntegerField(
-        verbose_name='숙박 인원'
-    )
-
-    checkin = models.DateField(
-        blank=True,
-        verbose_name='체크인 날짜',
-    )
-
-    checkout = models.DateField(
-        blank=True,
-        verbose_name='체크아웃 날짜',
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.guest}, {self.checkin}, {self.checkout}'
 
     class Meta:
         ordering = ['-created_at']
