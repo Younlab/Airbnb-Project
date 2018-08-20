@@ -1,4 +1,6 @@
+import requests
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
@@ -17,6 +19,10 @@ User = get_user_model()
 
 
 class ChangePassword(APIView):
+    def get(self, request, uidb64):
+        url = request.build_absolute_uri()
+        return Response(url)
+
     def post(self, request, uidb64):
         try:
             # url에서의 uid를 받아 디코딩하여 값을 받아온다.
@@ -25,8 +31,8 @@ class ChangePassword(APIView):
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
-        # serializer에 instance랑 data를 보내서 기존의 password값에서 새로운 password값으로
-        # 변경하게끔 만듬
+            # serializer에 instance랑 data를 보내서 기존의 password값에서 새로운 password값으로
+            # 변경하게끔 만듬
         if user is not None:
             serializer = ChangePasswordSerializer(instance=user, data=request.data)
             if serializer.is_valid():
@@ -34,5 +40,4 @@ class ChangePassword(APIView):
                 return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
