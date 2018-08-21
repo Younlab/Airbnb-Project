@@ -16,9 +16,12 @@ branches:
   - master
 before_script:
 - psql -c 'create database test_airbnb_rds;' -U postgres
+
 script:
 - cd app
-- "./manage.py test"
+- python manage.py makemigrations
+- python manage.py migrate
+- python manage.py test
 - cd ..
 - git add -A
 before_deploy:
