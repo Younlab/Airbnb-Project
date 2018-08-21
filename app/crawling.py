@@ -23,8 +23,10 @@ options.add_argument('headless')
 options.add_argument('disable-gpu')
 
 driver = webdriver.Chrome('/Users/sh/Downloads/chromedriver')
-# city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시', '광주광역시', '대전광역시', '울산광역시', '세종특별자치시', '경기도', '강원도']
-city_list = ['강원도']
+# city_list = ['서울특별시', '부산광역시', '대구광역시', '인천광역시', '대전광역시', '울산광역시', '강원도']
+
+
+city_list = ['인천광역시']
 
 
 def source_page_download(page_range):
@@ -292,5 +294,5 @@ def crawling_parse_save(page_range):
 
 if __name__ == '__main__':
     pool = Pool(processes=4)
-    # pool.map(source_page_download(2))
-    pool.map(crawling_parse_save(2))
+    # pool.map(source_page_download(4))
+    pool.map(crawling_parse_save(4))
