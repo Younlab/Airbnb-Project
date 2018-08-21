@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
@@ -281,4 +282,29 @@ class UserLikesRoomTest(APITestCase):
         self.client.force_authenticate(user)
 
         response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class UserChangePasswordCheckEmailTest(APITestCase):
+    """
+    User가 Password를 변경할 때 Email 전송 관련 테스트
+    """
+    URL = '/members/sendemail/'
+
+    def test_user_change_password_check_email_status_code_200(self):
+        """
+        user가 password 변경에 필요한 uidb64를 알아내기 위해 email을 발송할 때
+        정상적으로 HTTP 상태코드가 200으로 돌아오는지
+        :return:
+        """
+        user = get_dummy_user()
+        self.client.force_authenticate(user)
+
+        response = self.client.post(
+            self.URL,
+            data={
+                'email': DUMMY_USER_INFO['username'],
+            },
+            format='json',
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
