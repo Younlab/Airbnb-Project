@@ -1,5 +1,3 @@
-import sys
-
 from .base import *
 
 DEBUG = False
@@ -106,7 +104,7 @@ if private_ip:
 
 test_secrets = json.load(open(os.path.join(SECRETS_DIR, 'test.json')))
 
-if 'test' in sys.argv:
+if 'TRAVIS' in os.environ:
     # Test DB for Travis CI
     DATABASES = test_secrets['DATABASES']
 else:
