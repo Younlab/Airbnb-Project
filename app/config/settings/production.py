@@ -12,6 +12,8 @@ INSTALLED_APPS += [
     'django_extensions',
 ]
 
+DATABASES = secrets['DATABASES']
+
 # S3
 AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
@@ -102,17 +104,17 @@ private_ip = get_linux_ec2_private_ip()
 if private_ip:
     ALLOWED_HOSTS.append(private_ip)
 
-if 'TRAVIS' in os.environ:
-    # Test DB for Travis CI
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'HOST': 'localhost',
-            'PORT': 5432,
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'NAME': 'test_airbnb_rds'
-        }
-    }
-else:
-    DATABASES = secrets['DATABASES']
+# if 'TRAVIS' in os.environ:
+#     # Test DB for Travis CI
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'HOST': 'localhost',
+#             'PORT': 5432,
+#             'USER': 'postgres',
+#             'PASSWORD': '',
+#             'NAME': 'test_airbnb_rds'
+#         }
+#     }
+# else:
+#
