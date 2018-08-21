@@ -1,5 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
+from ..models import Rooms
+
 __all__ = (
     'Pagination',
 )
@@ -9,5 +11,6 @@ class Pagination(PageNumberPagination):
     """
     Pagination
     """
-    page_size = 18
-    page_query_param = 'page'
+
+    page_size = len(Rooms.objects.all())
+    # page_query_param = 'page'
