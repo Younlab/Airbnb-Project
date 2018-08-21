@@ -15,13 +15,10 @@ branches:
   only:
   - master
 before_script:
-- cp app/database.yml.travis app/database.yml
 - psql -c 'create database test_airbnb_rds;' -U postgres
 script:
 - cd app
-- python manage.py makemigrations
-- python manage.py migrate
-- python manage.py test
+- "./manage.py test"
 - cd ..
 - git add -A
 before_deploy:
