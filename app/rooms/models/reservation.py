@@ -49,13 +49,13 @@ class RoomReservation(models.Model):
 
 
 class ReservationReserved(models.Model):
-    reservation = models.ForeignKey(
+    room = models.ForeignKey(
         RoomReservation,
         on_delete=models.CASCADE,
-        related_name='reverse'
+        related_name='reservations_disable'
     )
 
-    reservations = models.DateField(
+    disable_days = models.DateField(
         blank=True,
         null=True,
     )
