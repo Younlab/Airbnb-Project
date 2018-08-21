@@ -46,3 +46,16 @@ class RoomReservation(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class ReservationReserved(models.Model):
+    reservation = models.ForeignKey(
+        RoomReservation,
+        on_delete=models.CASCADE,
+        related_name='reverse'
+    )
+
+    reservations = models.DateField(
+        blank=True,
+        null=True,
+    )

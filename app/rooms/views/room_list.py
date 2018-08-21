@@ -28,11 +28,12 @@ class RoomsCreate(generics.CreateAPIView):
 
 
 class RoomsFilter(django_filters.FilterSet):
-    address_city = django_filters.CharFilter(field_name='address_city', lookup_expr='contains', )
+    address_city = django_filters.CharFilter(field_name='address_city', lookup_expr='contains')
+    rooms_personnel = django_filters.NumberFilter(field_name='rooms_personnel', lookup_expr='exact')
 
     class Meta:
         model = Rooms
-        fields = ['address_city', ]
+        fields = ['address_city', 'rooms_personnel',]
 
 
 class RoomsList(generics.ListAPIView):

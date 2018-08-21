@@ -1,4 +1,7 @@
+import datetime
 from datetime import timedelta
+
+import arrow
 
 from rest_framework import serializers, status
 from rest_framework.generics import get_object_or_404
@@ -123,60 +126,108 @@ class RoomReservationSerializer(serializers.ModelSerializer):
     """
     숙소 예약
     """
+    # guest = UserSerializer()
+    room = Rooms.objects.all()
 
     class Meta:
         model = RoomReservation
-        fields = '__all__'
-
-    def validate(self, value):
-        if self.initial_data.get('room'):
-            # room_pk = self.room.get('pk')
-            room_pk = self.initial_data.get('room')
-            room = get_object_or_404(Rooms, pk=room_pk)
-            value['room'] = room
-        else:
-            raise serializers.ValidationError('rooms 정보가 전달되지 않았습니다.')
-
-        # room model 의 숙박 한도 인원 검사
-        if value.get('guest_personnel') and room.rooms_personnel < value['guest_personnel']:
-            raise serializers.ValidationError('숙박 허용 인원을 초과했습니다.')
-
-        # 기존 예약 목록 수집
-        reservation_list = []
-        reservation_instance = room.room_reservations.all()
-
-        for date in reservation_instance:
-            start_date = date.checkout - date.checkin
-            reservation_list += [date.checkin + timedelta(n) for n in range(start_date.days + 1)]
-
-        checkin = value.get('checkin')
-        checkout = value.get('checkout')
-
-        # 체크 인, 체크 아웃 필드 채워졌는지 검사
-        if not checkin:
-            raise serializers.ValidationError(detail='check-in 정보가 입력되지 않았습니다.',
-                                              status=status.HTTP_400_BAD_REQUEST)
-
-        elif not checkout:
-            raise serializers.ValidationError(detail='check-out 정보가 입력되지 않았습니다.',
-                                              status=status.HTTP_400_BAD_REQUEST)
-
-        # 잘못된 예약 예외처리, 체크 인 이 체크 아웃보다 뒷 일자 일 수 없고, 체크 인 과 체크 아웃 이 같은 일자 일 수가 없다.
-
-        if checkin > checkout or checkin == checkout:
-            raise serializers.ValidationError(detail='잘못된 예약입니다.', status=status.HTTP_400_BAD_REQUEST)
-
-        # 체크 인, 체크 아웃 필드 중복 검사, 이전 다른 사람이 먼저 예약 하였다면 예약 실패 처리
-        for day in reservation_list:
-            if day < checkin or day > checkout:
-                pass
-            else:
-                raise serializers.ValidationError('예약할 수 없는 일자입니다.')
-
-        return value
+        fields = (
+            'room',
+            'guest_personnel',
+            'guest',
+            'checkin',
+            'checkout',
+            'reserved',
+            'created_at'
+        )
 
     def create(self, validated_data):
-        return RoomReservation.objects.create(**validated_data)
+        request = self.context.get('request')
+        validated_data['guest'] = request.user
+        reservation = super().create(validated_data)
+
+        check_in = arrow.get(validated_data['checkin'])
+        check_out = arrow.get(validated_data['checkout'])
+
+        reserved_range = check_out - check_in
+        reserved_list = []
+
+        for i in range(reserved_range.days + 1):
+            reserved_list.append(check_in + timedelta(i))
+
+        print(reserved_list)
+
+        for l in reserved_list:
+            RoomReservation.reverse.create(reservations=l.date())
+
+        print(reserved_list, reserved_range)
+
+        return reservation
+
+    # def validate(self, attrs):
+    #
+    #     if attrs.get('room'):
+    #         room_pk = attrs.get('room')
+    #         room = RoomReservation.objects.filter(room=room_pk)
+    #         # room = get_object_or_404(Rooms, pk=rooms)
+    #         print(room)
+    #         attrs['room'] = room
+    #     else:
+    #         raise serializers.ValidationError('rooms 정보가 전달되지 않았습니다.')
+    #
+    #     # room model 의 숙박 한도 인원 검사
+    #     # if attrs.get('guest_personnel') and room.rooms_personnel < attrs['guest_personnel']:
+    #     #     raise serializers.ValidationError('숙박 허용 인원을 초과했습니다.')
+    #
+    #     # 기존 예약 목록 수집
+    #     reservation_list = []
+    #     reservation_instance = room.room_reservations.all()
+    #
+    #     for date in reservation_instance:
+    #         start_date = date.checkout - date.checkin
+    #         reservation_list += [date.checkin + timedelta(n) for n in range(start_date.days + 1)]
+    #
+    #     checkin = attrs.get('checkin')
+    #     checkout = attrs.get('checkout')
+    #
+    #     # 체크 인, 체크 아웃 필드 채워졌는지 검사
+    #     if not checkin:
+    #         raise serializers.ValidationError(detail='check-in 정보가 입력되지 않았습니다.',
+    #                                           status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     elif not checkout:
+    #         raise serializers.ValidationError(detail='check-out 정보가 입력되지 않았습니다.',
+    #                                           status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     # 잘못된 예약 예외처리, 체크 인 이 체크 아웃보다 뒷 일자 일 수 없고, 체크 인 과 체크 아웃 이 같은 일자 일 수가 없다.
+    #
+    #     if checkin > checkout or checkin == checkout:
+    #         raise serializers.ValidationError(detail='잘못된 예약입니다.', status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     # 체크 인, 체크 아웃 필드 중복 검사, 이전 다른 사람이 먼저 예약 하였다면 예약 실패 처리
+    #     for day in reservation_list:
+    #         if day < checkin or day > checkout:
+    #             pass
+    #         else:
+    #             raise serializers.ValidationError('예약할 수 없는 일자입니다.')
+    #
+    #     return attrs
+    #
+    # def create(self, validated_data):
+    #     rooms = validated_data.get('room')
+    #
+    #
+    #     r = super().create(validated_data)
+    #
+    #     staying_days = r.checkin - r.checkout
+    #     reserved_days = []
+    #     reserved_days += [r.checkin + timedelta(n) for n in range(staying_days.days + 1)]
+    #
+    #     for i in reserved_days:
+    #         date_instance, _ = RoomReservation.objects.get_or_create(reserved=i)
+    #         rooms.room_reservations.add(date_instance)
+    #     # RoomReservation.objects.create(**validated_data)
+    #     return r
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
