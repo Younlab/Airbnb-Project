@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, date
 
 import arrow
 
@@ -151,50 +151,58 @@ class RoomReservationSerializer(serializers.ModelSerializer):
 
         )
 
+    def validate(self, attrs):
+        request = self.context.get('request')
+        attrs['guest'] = request.user
 
-def validate(self, attrs):
-    room = attrs['room']
-    reservation_source = RoomReservation.objects.filter(room=room)
-    disable_days_list = []
-    for i in reservation_source:
-        staying_days = i.checkout - i.checkin
-        disable_days_list += [i.checkout + timedelta(n) for n in range(staying_days.days + 1)]
-    print(disable_days_list)
+        room = attrs['room']
 
-    check_in = attrs.get('checkin')
-    check_out = attrs.get('checkout')
+        reservation_source = RoomReservation.objects.filter(room=room)
 
-    for day in disable_days_list:
-        if day < check_in or day > check_out:
-            pass
-        else:
-            raise CustomException(detail='이미 예약중인 일자입니다.', status_code=status.HTTP_400_BAD_REQUEST)
+        check_in = attrs.get('checkin')
+        check_out = attrs.get('checkout')
 
-    return attrs
+        # 예약 일자 입력값 예외처리
+        if not check_in:
+            raise CustomException(detail='체크인 일자를 입력해 주세요', status_code=status.HTTP_400_BAD_REQUEST)
 
+        if not check_out:
+            raise CustomException(detail='체크아웃 일자를 입력해주세요', status_code=status.HTTP_400_BAD_REQUEST)
 
-def create(self, validated_data):
-    request = self.context.get('request')
-    validated_data['guest'] = request.user
+        if check_in > check_out or check_in == check_out:
+            raise CustomException(detail='체크인, 체크아웃 일자가 유효하지 않습니다.', status_code=status.HTTP_400_BAD_REQUEST)
 
-    check_in = arrow.get(validated_data['checkin']).date()
-    check_out = arrow.get(validated_data['checkout']).date()
-    print(check_out)
+        # 이미 예약된 일자 예외처리
+        disable_days_list = []
+        for i in reservation_source:
+            staying_days = i.checkout - i.checkin
+            disable_days_list += [i.checkin + timedelta(n) for n in range(staying_days.days + 1)]
 
-    reserved_save = super().create(validated_data)
+        for day in disable_days_list:
+            if day < check_in or day > check_out:
+                pass
+            else:
+                raise CustomException(detail='이미 예약된 일자입니다.', status_code=status.HTTP_400_BAD_REQUEST)
 
-    rooms = validated_data['room']
+        return attrs
 
-    reserved_range = check_out - check_in
-    reserved_list = []
-    for i in range(reserved_range.days + 1):
-        reserved_list.append(check_in + timedelta(i))
+    def create(self, validated_data):
+        rooms = validated_data.get('room')
+        reserved_save = super().create(validated_data)
 
-    for l in reserved_list:
-        ReservationReserved.objects.create(room=RoomReservation.objects.filter(room=rooms).first(),
-                                           disable_days=l.date())
+        # 예약된 일자 목록 저장
+        check_in = arrow.get(validated_data['checkin']).date()
+        check_out = arrow.get(validated_data['checkout']).date()
+        reserved_range = check_out - check_in
+        reserved_list = []
+        for i in range(reserved_range.days + 1):
+            reserved_list.append(check_in + timedelta(i))
 
-    return reserved_save
+        for l in reserved_list:
+            ReservationReserved.objects.create(room=RoomReservation.objects.filter(room=rooms).first(),
+                                               disable_days=l)
+
+        return reserved_save
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
