@@ -1,6 +1,7 @@
 # Project
 /.secrets
 secrets.tar
+.travis.yml
 .database.yml
 /.static
 /.media
