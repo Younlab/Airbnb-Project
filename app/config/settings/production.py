@@ -102,10 +102,17 @@ private_ip = get_linux_ec2_private_ip()
 if private_ip:
     ALLOWED_HOSTS.append(private_ip)
 
-test_secrets = json.load(open(os.path.join(SECRETS_DIR, 'test.json')))
-
 if 'TRAVIS' in os.environ:
     # Test DB for Travis CI
-    DATABASES = test_secrets['DATABASES']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': 'localhost',
+            'PORT': 5432,
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'NAME': 'test_airbnb_rds'
+        }
+    }
 else:
     DATABASES = secrets['DATABASES']
