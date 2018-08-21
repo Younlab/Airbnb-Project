@@ -5,7 +5,7 @@ import django_filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# from .pagination import Pagination
+from .pagination import Pagination
 from ..serializer.room_list import RoomListSerializer, RoomDetailSerializer, RoomCreateSerializer
 from ..models import Rooms
 
@@ -42,7 +42,7 @@ class RoomsList(generics.ListAPIView):
     """
     queryset = Rooms.objects.all()
     serializer_class = RoomListSerializer
-    # pagination_class = Pagination
+    pagination_class = Pagination
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter)
     # filter_fields = ('address_city',)
     filter_class = RoomsFilter
