@@ -294,5 +294,5 @@ def crawling_parse_save(page_range):
 
 if __name__ == '__main__':
     pool = Pool(processes=4)
-    # pool.map(source_page_download(4))
-    pool.map(crawling_parse_save(4))
+    # pool.map(source_page_download(1))
+    pool.map(crawling_parse_save(1))
